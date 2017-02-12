@@ -10,7 +10,7 @@ Der Levelgenerator übernimmt hierbei die Verarbeitung der anwedungsspezifischen
 \subsection{Spielidee}
 
 Es soll ein 2D Spiel in Top-Down Perspektive entwickelt werden.
-Der Spielziel ist es, ein sich ständig leerendes Bier rechtzeitig durch den Besuch eines Spätis wieder aufzufüllen und bis zum Ende einer vorher definierten Zeit das Bier nicht leer werden zu lassen.
+Der Spielziel ist es, ein sich ständig leerendes Bier rechtzeitig durch den Besuch eines \todo{Späti erklären}Spätis wieder aufzufüllen und bis zum Ende einer vorher definierten Zeit das Bier nicht leer werden zu lassen.
 Dazu bewegt der Spieler sich in einer blockbasierten Welt.
 Diese enthält sowohl Spätis zum nachfüllen des Bieres, als auch Gegner welche den Füllstand des Bieres oder die Geschwindigkeit des Spieler reduzieren können.
 In Abbildung \ref{fig:einleitung:screenshot} wird eine typische Szene des Spiels gezeigt.
@@ -19,9 +19,7 @@ In Abbildung \ref{fig:einleitung:screenshot} wird eine typische Szene des Spiels
 
 
 \subsection{Zweck der Codegenerierung}
-\todo{stubs}
-- Anordnung der Blöcke (mögliche Blöcke werden in ... beschrieben)
-- Startpunkt des Spielers
-- Startpunkt der Gegner
-- Angriffswerte der Gegner
-- Initiale Werte des Spielers
+
+Das Spiel beinhaltet mehrere Level.
+Ein Level beinhaltet Informationen über die Anordnung der Blöcke auf der Karte, die Startpunkte des Spielers und eventueller Gegner, der Lauf- und Trinkgeschwindigkeit des Spielers, den Parametern der Gegner (Angriffsziel und Angrifswert) sowie der Zeitangabe, wie lange ein Level andauert.
+Dazu wurde eine anwendungsspezifische Sprache und ein Codegenerator entwickelt, auf welchen in Abschnitt \ref{sec:levelerzeugung} näher eingegangen wird.
