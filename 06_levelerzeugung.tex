@@ -1,7 +1,7 @@
 \section{Levelerzeugung}\label{sec:levelerzeugung}
 
 In diesem Abschnitt wird das Projekt des Levelgenerators näher erläutert. Die Schwerpunkte liegen dabei auf dem Level Metamodell sowie auf der Codegenerierung aus einer gegebenen Leveldatei. \newline 
-Dabei wird erläutert wie so eine textuelle Leveldatei aussehen muss, um anschließend die beschreibende Domain Specific Language (DSL) verständlich darzustellen.\newline
+Dabei wird erläutert, wie eine textuelle Leveldatei aussehen muss. Anschließend wird das Metamodell, das diese  Domain Specific Language (DSL) beschreibt, verständlich dargestellt.\newline
 Abschließend wird in diesem Kapitel der Levelgenerator vorgestellt, mit Augenmerk auf seinen Aufbau und seine Funktionsweise.
 
 \subsection{Aufbau einer nbno-Datei}
@@ -9,7 +9,7 @@ Um ein Level mit dem Levelgenerator zu erzeugen, muss eine textuelle Datei im NB
 Zunächst enthält ein Level einen Namen und Levelkonfigurationen (vgl. Listing \ref{lst:nbno-lvlConfig}). Der bisherige Projektstand benötigt als Leveleigenschaft nur die Spielzeit des Levels (entspricht dem rechten Balken des Spiels (vgl. Abb. \ref{fig:einleitung:screenshot})).\newline
 Der Spieler selbst erhält Eigenschaften die seine Geschwindigkeit, seine Trinkgeschwindigkeit und das initiale Bierlevel einstellen. Wobei das Bierlevel dem linken Balken entspricht (vgl. Abb. \ref{fig:einleitung:screenshot}) und die Trinkgeschwindigkeit die Geschwindigkeit der Leerung dieses Balkens bestimmt.
 
-\begin{lstlisting}[caption={Level Metadaten und Spieler}\label{lst:nbno-lvlConfig},captionpos=t] 
+\begin{lstlisting}[caption={Level Metadaten und Spieler}\label{lst:nbno-lvlConfig},captionpos=t]
 levelName: TestName
 levelConfiguration {
     levelTime: 40
@@ -24,7 +24,7 @@ player {
 An diesem Auszug ist der Aufbau einer nbno-Datei bereits zu erkennen. Bestimmte Attribute besitzen Eigenschaften die angelehnt an das JSON-Format in geschweiften Klammern aufgelistet werden. Separiert werden diese Eigenschaften durch Kommata.\newline
 Dies ist auch im nächsten Auszug gut zu erkennen. Es werden die Gegnerklassen angelegt und mit bestimmten Eigenschaften ausgestattet (vgl. Listing \ref{lst:nbno-enemies}). Es wird ein Name an die Klassen verteilt, durch den zur Laufzeit eine passende Darstellung des Charakters erreicht wird. Weitere Eigenschaften sind die Geschwindigkeit, das Angriffsziel und der Schaden des Gegners. Die künstliche Intelligenz des Gegenspielers wird hier ebenfalls vergeben. Dabei ist die erste Zahl die Sichtweite des Charakters und die Zweite die Wahrscheinlichkeitsangabe, wie oft der Gegner seine Richtung ändert (Die KI wurde genauer erläutert in \ref{sec:levelcontroller}).\newline
 %TODO mach richtige referenzierung auf kapitel
-\begin{lstlisting}[caption={Gegnerklassen}\label{lst:nbno-enemies},captionpos=t] 
+\begin{lstlisting}[caption={Gegnerklassen}\label{lst:nbno-enemies},captionpos=t]
 enemies {
     1 {
         name: Schnorrer,
@@ -154,3 +154,5 @@ Ein weiteres Detail wird in dieser Methode ebenfalls sichtbar. Beim Durchlaufen 
 Alle variablen Attribute, wie der Spieler oder die Gegnerklassen,  werden als Strings erzeugt. Wobei unter jedem Gegner und dem Spieler jeweils noch ein Straßenblock erzeugt werden muss. All diese erstellten Zeichenketten werden in Listen gespeichert. \newline
 Die Codegenerierung erfolgt am Ende durch das Zusammensetzen aller gespeicherten Strings. Alle Konstanten Angaben, wie der Import von Datentypen oder das Überschreiben des Konstruktors, werden zuvor in der Methode \textit{generateLevelClass()} mit den anderen variablen Strings in einer Liste zusammengeführt. Diese enthält dann die komplette Levelklasse als Stringrepräsentation.\newline 
 Über die final entstandene Stringliste wird in der \textit{writeFile()} Methode iteriert und für jeden String eine eigene Zeile in die neue Javaklasse geschrieben.
+
+Ist ein Level erfolgreich erstellt, muss diese Javadatei in das Spielprojekt in das \texttt{level} Package kopiert werden. Wird das Spiel dann gestartet steht das Level zur Verfügung. Dies ist das Bindeglied zwischen den zwei Projekten.
