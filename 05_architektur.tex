@@ -51,5 +51,16 @@ Dazu wird während der Initialisierung eine Karte der Straßenobjekte in Form ei
 Anhand dieser Karte können nun, für jedes \texttt{Street}-Objekt einzeln, die Nachbarn ermittelt und der korrekte Straßentyp und eine eventuelle Rotation festgestellt werden.
 
 \subsubsection{Kollisionskontrolle}
+Der \texttt{LevelController} ermittelt Kollisionen zwischen \texttt{GameObject}-Objekten.
+Dazu wird die Methode \texttt{Shape.intersect(Shape)} aus der \textit{Slick2D}-Bibliothek verwendet, welche zwei geometrische Objekte auf eine Schnittmenge untersucht und \texttt{true} zurück liefert sobald eine Schnittmenge existiert.
+In diesem Fall berühren sich beide \texttt{GameObject}-Objekte und es wird auf beiden die \texttt{GameObject.interact(GameObject)} Methode aufgerufen.
+
+Diese Methode stellt die Interaktion zwischen zwei GO sicher \todo{stub}
+
+- Schwierigkeiten hierbei können auftreten, wenn eine Kollision nicht oft genug überprüft wird.
+- \textit{Slick2D} ist bestrebt, in regelmäßigen Abständen die implementierte Spiellogik durch Aufruf einer \texttt{update()} Methode zu aktualisieren.
+- Bei jeder Aktualisierung wird auf Kollisionen geprüft. \todo{stubs}
+
+
 
 \subsubsection{Künstliche Intelligenz der Gegner}
