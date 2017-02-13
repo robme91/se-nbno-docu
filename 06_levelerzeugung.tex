@@ -90,10 +90,67 @@ beerLevel: 'beerLevel:' beerLevelValue;
 beerLevelValue: DIGITS;
 \end{lstlisting}
 
-\subsection{Codegenerator}
-- modellinterpreter
-- Fehler Handling! (Extra n exception handler beigefügt)
-- Semantik Prüfung
-- level erzeugung per string maps 
-- methoden zur übersichtlichkeit und entkopplung aus anderen methoden zum erzeugen von strings
-- stream als java datei speichern
+\subsection{Levelgenerator}
+
+Als Modellinterpretierer und damit Levelgenerator fungiert eine Java Klasse "LevelGenerator.java". In ihr werden die durch Antlr erzeugten Lexer und Parser ausgeführt, eine semantische Prüfung der übergebenen Daten vollzogen und abschließend eine Java Leveldatei erzeugt.\newline
+Ein sehr wichtiger Bestandteil des Generators ist das Errorhandling. Die Antlr Parser und Lexer werfen standardisiert keine Fehler sondern geben lediglich auf der Konsole eine Nachricht aus, das ein Fehler beim Parsen aufgetreten ist. Gewünscht ist jedoch, dass der Levelgenerator fehlerhaft abbricht bei jeglicher Art eines Syntaxfehlers. Aus diesem Grund wird der Antlr ErrorListener beerbt und der eigene "LevelErrorListener" dem Parser und Lexer im Levelgenerator übergeben. Er überschreibt die bei einem Syntaxfehler aufgerufene Methode und kann so eine Exception werfen, die den Levelerzeugungsvorgang abbricht.\newline
+Der Generator liest zu beginn eine .nbno-Datei aus dem "levelfiles" Projektverzeichnis ein, deren Dateiname über die Konsole übergeben wird. Dieses File wird dann geparst und auf Fehlerhafte Einträge oder Strukturen geprüft. Entspricht die Datei der Grammatik, wird eine Java Klasse mit dem in der Leveldatei spezifizierten Namen angelegt und gespeichert.\newline
+Durch das Metamodell ist die syntaktische Analyse bereits abgedeckt, weshalb im Generator die semantische Prüfung fokussiert wird. Dafür werden die erzeugten Listener Methoden für die Attribute und Attributwerte überschrieben. Im folgenden Codeauszug (vgl. Listing \ref{lst:codegen-lvlName}) wird der Levelname auf Länge (maximal 100 Zeichen) geprüft. Des Weiteren wird bei Korrektheit das erste Zeichen zu einem Großbuchstaben gewandelt, so dass die Javaklasse den Javakonventionen entspricht. Ist der Levelname zu lang, so wird ein Fehler geworfen und der Generierungsvorgang abgebrochen.
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={LevelGenerator: Levelnamensprüfung}\label{lst:codegen-lvlName},captionpos=t,language=Java, firstnumber=105]
+@Override
+public void enterLevelNameValue(LevelGrammarParser.LevelNameValueContext ctx) {
+  final String name = ctx.getText();
+  if(name.length() > 100){
+    throw new IllegalArgumentException(
+      GeneratorUtils.getFormattedErrorMessage("Level name is to long!", ctx.getStart()));
+  }
+  levelName = name.substring(0,1).toUpperCase() + name.substring(1);
+}
+\end{lstlisting}
+\end{minipage}
+Die weiteren Attribute und Eigenschaften werden auf die gleiche Art und Weise geprüft. Beispielsweise wird die Geschwindigkeit des Spielers auf einen Wertebereich zwischen 0 und 100 in der überschriebenen Methode \textit{enterSpeedValue()} geprüft. So ist gewährleistet das am Ende alle Attribute auch die inhaltlich korrekten Werte enthalten. \newline
+Eine weitere Interessante Prüfung geschieht bei der Spielkartenanalyse (vgl. Listing \ref{lst:codegen-mapCheck}). Die Map muss immer genau 20 Zeilen und 25 Spalten enthalten. Wobei Spalten in diesem Projekt als Blöcke interpretiert werden. Ein Block wird im Spiel zu einem 32x32 Pixel Block umgerechnet. Auf diese Weise besitzt das Spielfeld immer die gleiche Größe. Die Leveldateien müssten so auch nicht bearbeitet werden, falls die Größen im Spiel einmal skaliert werden sollten.\newline
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Codegenerator: Map Prüfung}\label{lst:codegen-mapCheck},captionpos=t,language=Java, firstnumber=230]
+@Override
+public void enterMapValue(LevelGrammarParser.MapValueContext ctx) {
+  final int maxRows = 20;
+  final int maxBlocks= 25;
+  if(ctx.row().size() != maxRows){
+      throw new IllegalArgumentException("The map must have 20 rows. Not more or less.");
+  }
+  int rowCounter = 0;
+  int blockCounter = 0;
+  for(LevelGrammarParser.RowContext row : ctx.row()){
+      if(row.block().size() != maxBlocks){
+          throw new IllegalArgumentException("Each row in the map must contain " + maxBlocks + " Blocks. "
+                  + "In Line " + row.getStart().getLine() + "is an incorrect number of blocks.");
+      }
+      for(LevelGrammarParser.BlockContext block : row.block()){
+          final int xPos = blockCounter;
+          final int yPos = rowCounter;
+          final String blockVal = block.getText();
+          switch (blockVal){
+            case GeneratorUtils.HOUSE:
+               generateHouseString(xPos, yPos);
+               break;
+            [...]
+            default:        // wenn keins der oberen matched, muss es eine Zahl sein
+               generateEnemyString(Integer.parseInt(blockVal), xPos, yPos);
+               generateStreetString(xPos, yPos);
+               break;
+          }
+          blockCounter ++;
+      }
+      blockCounter = 0;
+      rowCounter ++;
+  }
+}
+\end{lstlisting}
+\end{minipage}
+
+Ein weiteres Detail wird in dieser Methode ebenfalls sichtbar. Beim Durchlaufen der einzelnen Blöcke der Karte wird für jeden Block ein String angelegt. Diese Strings werden in einer Liste von Strings gesammelt.\newline
+Alle variablen Attribute, wie der Spieler oder die Gegnerklassen,  werden als Strings erzeugt. Wobei unter jedem Gegner und dem Spieler jeweils noch ein Straßenblock erzeugt werden muss. All diese erstellten Zeichenketten werden in Listen gespeichert. \newline
+Die Codegenerierung erfolgt am Ende durch das Zusammensetzen aller gespeicherten Strings. Alle Konstanten Angaben, wie der Import von Datentypen oder das Überschreiben des Konstruktors, werden zuvor in der Methode \textit{generateLevelClass()} mit den anderen variablen Strings in einer Liste zusammengeführt. Diese enthält dann die komplette Levelklasse als Stringrepräsentation.\newline 
+Über die final entstandene Stringliste wird in der \textit{writeFile()} Methode iteriert und für jeden String eine eigene Zeile in die neue Javaklasse geschrieben.
