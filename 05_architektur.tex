@@ -54,13 +54,40 @@ Anhand dieser Karte können nun, für jedes \texttt{Street}-Objekt einzeln, die 
 Der \texttt{LevelController} ermittelt Kollisionen zwischen \texttt{GameObject}-Objekten.
 Dazu wird die Methode \texttt{Shape.intersect(Shape)} aus der \textit{Slick2D}-Bibliothek verwendet, welche zwei geometrische Objekte auf eine Schnittmenge untersucht und \texttt{true} zurück liefert sobald eine Schnittmenge existiert.
 In diesem Fall berühren sich beide \texttt{GameObject}-Objekte und es wird auf beiden die \texttt{GameObject.interact(GameObject)} Methode aufgerufen.
+Dies stellt die Interaktion zwischen zwei \texttt{GameObject} Instanzen sicher.
+Innerhalb der konkreten Implementierungen von \texttt{interact()} wird dann unter anderem durch Reflection entschieden, welche Aktionen durchgeführt werden sollen.
+In Listing \ref{lst:npc-interact} wird dies anhand der Implementierung der \texttt{interact()} Methode der Klasse \texttt{NPC} deutlich.
+Sobald ein Objekt getroffen wird, welches die Eigenschaft \texttt{isBlocking} aufweist, wird eine Zufallsrichtung gewählt.
+Wurde der \texttt{Player} getroffen, dann wird er, je nach spezifiziertem Angriffsziel, angegriffen und ein Timeout gesetzt, damit die Angriffe nicht direkt nacheinander erfolgen können.
 
-Diese Methode stellt die Interaktion zwischen zwei GO sicher \todo{stub}
+\begin{lstlisting}[caption={NPC.interact() Implementierung}\label{lst:npc-interact},captionpos=t,language=Java]
+@Override
+public void interact(GameObject go) {
+ if (go.isBlocking()) {
+  this.setDirection(getRandomDirection());
+ }
+ if (interactionTimeout == 0) {
+  if (go.getClass().equals(Player.class)) {
+   Player p = (Player) go;
+   if (attackTarget == Enums.AttackTarget.DRINK) {
+    p.setBeerLevel(p.getBeerLevel() - attackValue);
+    this.interactionTimeout = this.rechargeDuration;
+   }
+   if (attackTarget == Enums.AttackTarget.PLAYER_SPEED) {
+    p.attackSpeed(attackValue);
+   }
+  }
+ }
+ super.interact(go);
+}
 
-- Schwierigkeiten hierbei können auftreten, wenn eine Kollision nicht oft genug überprüft wird.
-- \textit{Slick2D} ist bestrebt, in regelmäßigen Abständen die implementierte Spiellogik durch Aufruf einer \texttt{update()} Methode zu aktualisieren.
-- Bei jeder Aktualisierung wird auf Kollisionen geprüft. \todo{stubs}
+\end{lstlisting}
 
+Slick2D ist bestrebt, in regelmäßigen Abständen die implementierte Spiellogik durch Aufruf einer \texttt{update()} Methode zu aktualisieren.
+Bei jeder Aktualisierung wird auf Kollisionen geprüft.
+Es kann bei zu geringer Aktualisierungsrate, beispielsweise aus Performancegründen, oder zu hoher Geschwindigkeit der bewegenden Spielobjekte dazu kommen, dass einzelne Treffer mit Objekten nicht erkannt, und die Spielobjekte somit über Objekte springen können.
+Aus diesem Grund unterteilt der \texttt{LevelController} Bewegungsintentionen in mehrere Teilschritte, prüft diese einzeln und unterbricht die Bewegung sobald eine Kollision innerhalb eines Teilschrittes erkannt wurde.
+Dies sorgt auch dafür, dass Spielobjekte sauber an Kanten anderer Spielobjekte stehen bleiben und nicht beispielsweise wenige Pixel davor.
 
 
 \subsubsection{Künstliche Intelligenz der Gegner}
