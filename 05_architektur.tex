@@ -27,11 +27,15 @@ In Abbildung \ref{fig:spielarchitektur:abstractlevel} wird der Aufbau eines Leve
 Ein Level besteht aus einer Menge an \texttt{NPC}-Objekten, welche die Gegner repräsentieren.
 Außerdem beinhaltet es ein \texttt{Player}-Objekt sowie die Menge der Blöcke(\texttt{Block}), also der Karte des Levels.
 Eine Übersicht über alle verwendbaren Spielobjekte wird in Abbildung \ref{fig:spielarchitektur:model} gegeben.
+Level sind komplexe Datentypen und verstehen sich als Komposition der, in Abbildung \ref{fig:spielarchitektur:model} gezeigten, spielspezifischen \texttt{GameObject} Datentypen.
+Zur Vermeidung von Redundanz und zur klaren Trennung zwischen Modell und Controller wird die Steuerung der Elemente eines Levels durch den \texttt{LevelController} übernommen.
+Durch diese Trennung eignen sich Implementierungen von \texttt{AbstractLevel} sehr gut zur Erzeugung durch eine anwendungsspezifische Sprache.
 
 \begin{figure}[]\centering\includegraphics[width=2in]{img/05_abstractlevel_uml.png}\caption{UML Darstellung der Klasse AbstractLevel}\label{fig:spielarchitektur:abstractlevel}\end{figure}
 
 \begin{figure}[]\centering\includegraphics[width=3in]{img/05_model.png}\caption{Spielobjekte}\label{fig:spielarchitektur:model}\end{figure}
 
+\subsection{LevelController}
 
 \subsection{Highlights der Implementierung}
 
