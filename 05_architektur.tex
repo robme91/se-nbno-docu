@@ -1,6 +1,8 @@
 \section{Aufbau der Spielarchitektur}
+\label{sec:architektur}
 
 \subsection{Überblick}
+\label{sub:architektur:ueberblick}
 
 Slick2D stellt Techniken zur Umsetzung eines zustandsbasierten Spieles zur Verfügung.
 In Abbildung \ref{fig:spielarchitektur:states} werden die Zustände des Spiels und ihre Reihenfolge gezeigt.
@@ -21,6 +23,7 @@ Der \texttt{LevelController} kontrolliert und steuert die Bestandteile eines Lev
 \caption{FMC Diagramm des Spiels}\label{fig:spielarchitektur:fmc}\end{figure}
 
 \subsection{Level}
+\label{sub:architektur:level}
 
 Jedes Level erbt von \texttt{AbstractLevel}.
 In Abbildung \ref{fig:spielarchitektur:abstractlevel} wird der Aufbau eines Levels deutlich.
@@ -36,6 +39,7 @@ Durch diese Trennung eignen sich Implementierungen von \texttt{AbstractLevel} se
 \begin{figure}[]\centering\includegraphics[width=3in]{img/05_model.png}\caption{Spielobjekte}\label{fig:spielarchitektur:model}\end{figure}
 
 \subsection{LevelController}
+\label{sub:architektur:levelcontroller}
 
 Der \texttt{LevelController} ist die funktionale Kernkomponente des Spiels.
 Zu den wichtigsten Funktionalitäten zählen die Initialisierung eines Levels, die Kollisionskontrolle innerhalb eines Levels sowie die Berechnung der künstlichen Intelligenz der NPCs.
@@ -91,3 +95,9 @@ Dies sorgt auch dafür, dass Spielobjekte sauber an Kanten anderer Spielobjekte 
 
 
 \subsubsection{Künstliche Intelligenz der Gegner}
+\todo{stubs}
+- wird über zwei Werte spezifiziert.
+- \texttt{updateAI()}
+- Iteriert über alle NPC und zieht Linie zum Spieler
+- Wenn Sichtlinie kein \texttt{isBlocking} Hindernis schneidet wird geprüft ob Länge < Sichtlänge
+- Dabei ist die erste Zahl die Sichtweite des Charakters und die Zweite die Wahrscheinlichkeitsangabe, wahrscheinlich der Gegner auf gesehenes reagiert.
