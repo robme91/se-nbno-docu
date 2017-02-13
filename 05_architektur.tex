@@ -37,14 +37,16 @@ Durch diese Trennung eignen sich Implementierungen von \texttt{AbstractLevel} se
 
 \subsection{LevelController}
 
-- Initialisiert ein Level zur Benutzung (Blockpositionen ...)
-- Erhält die Eingaben des Nutzers und wandelt diese in Änderungen des Levels um
-- steuert die KI
-\todo{stubs}
+Der \texttt{LevelController} ist die funktionale Kernkomponente des Spiels.
+Zu den wichtigsten Funktionalitäten zählen die Initialisierung eines Levels, die Kollisionskontrolle innerhalb eines Levels sowie die Berechnung der künstlichen Intelligenz der NPCs.
+Auf diese Funktionalitäten wird im Folgenden näher eingegangen.
 
-\subsection{Highlights der Implementierung}
+\subsubsection{Initialisierung des Levels}
+In der Klasse \texttt{GameObject} in Abbildung \ref{fig:spielarchitektur:model} ist ersichtlich, dass jedes Spielobjekt Informationen über seine eigene Position auf der Spielfläche (\texttt{pos\_x} und \texttt{pos\_y}) besitzt.
+Um die Level unabhängig von der Pixelgröße des Ausgabefensters und der Blockgröße zu gestalten, entsprechen diese Positionsangaben zunächst einfachen Indexwerten.
+Die Indexwerte entsprechen der Position des entsprechenden Spielobjekts vom oberen linken Spielfeldrand aus.
+Es werden zunächst alle Blockindexwerte mit den korrekten pixelbasierten Positionen aktualisiert.
 
-Ideen:
-- LevelMenu
-- Kollisionskontrolle
-- KI
+
+\subsubsection{Kollisionskontrolle}
+\subsubsection{Künstliche Intelligenz der Gegner}
