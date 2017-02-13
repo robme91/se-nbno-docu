@@ -46,7 +46,10 @@ In der Klasse \texttt{GameObject} in Abbildung \ref{fig:spielarchitektur:model} 
 Um die Level unabhängig von der Pixelgröße des Ausgabefensters und der Blockgröße zu gestalten, entsprechen diese Positionsangaben zunächst einfachen Indexwerten.
 Die Indexwerte entsprechen der Position des entsprechenden Spielobjekts vom oberen linken Spielfeldrand aus.
 Es werden zunächst alle Blockindexwerte mit den korrekten pixelbasierten Positionen aktualisiert.
-
+Ebenfalls muss Der Typ von \texttt{Street}-Objekten, also ob es sich hierbei beispielsweise um eine Kreuzung oder einer geraden Straße handelt, ermittelt werden.
+Dazu wird während der Initialisierung eine Karte der Straßenobjekte in Form eines zweidimensionalen \texttt{boolean[][]}-Arrays erzeugt.
+Anhand dieser Karte können nun, für jedes \texttt{Street}-Objekt einzeln, die Nachbarn ermittelt und der korrekte Straßentyp und eine eventuelle Rotation festgestellt werden.
 
 \subsubsection{Kollisionskontrolle}
+
 \subsubsection{Künstliche Intelligenz der Gegner}
