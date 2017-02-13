@@ -1,6 +1,99 @@
-\section{Levelerzeugung}
-\label{sec:levelerzeugung}
+\section{Levelerzeugung}\label{sec:levelerzeugung}
 
-\subsection{DSL}
+In diesem Abschnitt wird das Projekt des Levelgenerators näher erläutert. Die Schwerpunkte liegen dabei auf dem Level Metamodell sowie auf der Codegenerierung aus einer gegebenen Leveldatei. \newline 
+Dabei wird erläutert wie so eine textuelle Leveldatei aussehen muss, um anschließend die beschreibende Domain Specific Language (DSL) verständlich darzustellen.\newline
+Abschließend wird in diesem Kapitel der Levelgenerator vorgestellt, mit Augenmerk auf seinen Aufbau und seine Funktionsweise.
+
+\subsection{Aufbau einer nbno-Datei}
+Um ein Level mit dem Levelgenerator zu erzeugen, muss eine textuelle Datei im NBNO Format an den Generator übergeben werden. Eine solche Datei besitzt eine durch die DSL fest vorgegebene Struktur. Diese wird durch die benötigten Levelattribute und Eigenschaften bestimmt.\newline
+Zunächst enthält ein Level einen Namen und Levelkonfigurationen (vgl. Listing \ref{lst:nbno-lvlConfig}). Der bisherige Projektstand benötigt als Leveleigenschaft nur die Spielzeit des Levels (entspricht dem rechten Balken des Spiels (vgl. Abb. \ref{fig:einleitung:screenshot})).\newline
+Der Spieler selbst erhält Eigenschaften die seine Geschwindigkeit, seine Trinkgeschwindigkeit und das initiale Bierlevel einstellen. Wobei das Bierlevel dem linken Balken entspricht (vgl. Abb. \ref{fig:einleitung:screenshot}) und die Trinkgeschwindigkeit die Geschwindigkeit der Leerung dieses Balkens bestimmt.
+
+\begin{lstlisting}[caption={Level Metadaten und Spieler}\label{lst:nbno-lvlConfig},captionpos=t] 
+levelName: TestName
+levelConfiguration {
+    levelTime: 40
+}
+player {
+    speed: 50,
+    drinkSpeed: 6,
+    beerLevel: 30
+}
+\end{lstlisting}
+
+An diesem Auszug ist der Aufbau einer nbno-Datei bereits zu erkennen. Bestimmte Attribute besitzen Eigenschaften die angelehnt an das JSON-Format in geschweiften Klammern aufgelistet werden. Separiert werden diese Eigenschaften durch Kommata.\newline
+Dies ist auch im nächsten Auszug gut zu erkennen. Es werden die Gegnerklassen angelegt und mit bestimmten Eigenschaften ausgestattet (vgl. Listing \ref{lst:nbno-enemies}). Es wird ein Name an die Klassen verteilt, durch den zur Laufzeit eine passende Darstellung des Charakters erreicht wird. Weitere Eigenschaften sind die Geschwindigkeit, das Angriffsziel und der Schaden des Gegners. Die künstliche Intelligenz des Gegenspielers wird hier ebenfalls vergeben. Dabei ist die erste Zahl die Sichtweite des Charakters und die Zweite die Wahrscheinlichkeitsangabe, wie oft der Gegner seine Richtung ändert (Die KI wurde genauer erläutert in \ref{sec:levelcontroller}).\newline
+%TODO mach richtige referenzierung auf kapitel
+\begin{lstlisting}[caption={Gegnerklassen}\label{lst:nbno-enemies},captionpos=t] 
+enemies {
+    1 {
+        name: Schnorrer,
+        speed: 40,
+        attackTarget: DRINK,
+        damage: 30,
+        ki: (10|30)
+    },
+    2 {
+        name: Polizist,
+        speed: 25,
+        attackTarget: PLAYER_SPEED,
+        damage: 70,
+        ki: (24|40)
+    }
+}
+\end{lstlisting}
+
+Wichtig sind auch die Ziffern vor den eigentlichen Gegnereigenschaften. Sie stellen die Repräsentation auf der Map dar, die in der Leveldatei angelegt wird (vgl. Listing \ref{lst:nbno-map}). Der Ausschnitt zeigt einige Zeilen einer Map Konfiguration. Die Map wird durch Buchstaben und Ziffern repräsentiert, wobei jedes Zeichen dabei eine eigene Bedeutung hat. Die zuvor erwähnten Ziffern der Gegner stellen hier die Startpositionen eines Gegners der entsprechenden Klasse dar. Auf diese Weise ist es möglich, von einer Klasse mehrere Feinde starten zu lassen.\newline
+Das "X" ist die Startposition des Spielers. Ein "H" steht für ein Haus, ein "P" für ein Block Park und das "S" ist das Symbol für eine Straße. Die Spätis werden per Pfeilspitze dargestellt. Je nachdem in welche Richtung die Spitze zeigt, öffnet sich der Späti im Spiel und kann vom Spieler angelaufen werden. In diesem Beispiel bedeutet demnach das "V", dass der Späti sich nach unten öffnet. \newline
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[caption={Level Map}\label{lst:nbno-map},captionpos=t] 
+map {
+    H,H,H,H,H,H,H,H,H,H,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S
+    P,P,S,S,S,S,S,S,2,H,S,S,S,S,S,S,1,S,S,S,S,S,S,S,S
+    P,P,S,S,S,S,S,S,S,H,S,S,S,S,H,H,H,S,S,S,S,S,S,S,S
+    H,H,V,H,H,H,S,S,S,H,S,S,S,S,H,H,H,S,S,S,S,S,S,S,S
+	[...]
+    S,S,S,S,S,S,S,S,S,S,S,X,S,S,S,S,S,S,S,S,S,S,S,S,S
+}
+\end{lstlisting}
+\end{minipage}
+
+\subsection{Metamodell eines Levels}
+%TODO syntax highlighting für ebnf
+Das Metamodell dieses Projekts beschreibt die Struktur und den Aufbau eines Levels des Spiels. Das Modell ist in EBNF verfasst und generiert durch Antlr die Compiler für die gewünschte NBNO-DSL.\newline
+Die DSL muss immer gleich aufgebaut sein (vgl. Listing \ref{lst:grammar-structure}). Es muss mit dem Levelnamen begonnen werden und anschließend die Levelkonfigurationen festgelegt werden. Danach folgt der Spieler und die Gegnerklassen. Abschließend muss ein Spielfeld definiert werden.\newline
+Um Wiederholungen zu vermeiden, sind Lexerregeln aufgestellt, die Alphabete und Trenner festgelegen.
+Außerdem ist eingestellt, dass alle Leerzeichen und Abstände beim Parsen übersprungen werden.
+\begin{lstlisting}[caption={Aufbau und Tokens der DSL}\label{lst:grammar-structure},captionpos=t] 
+file : levelName levelConfigs player enemies map EOF;
+
+// helper definitions
+ALPHABET: ('a'..'z' | 'A'..'Z')+;
+DIGITS : [0-9]+;
+ObjectBeginn:'{';
+ObjectEnd: '}';
+Separator: ',';
+WS : [ \t\n\r]+ -> skip ; // skip witepsaces tabs and linebreaks
+\end{lstlisting}
+ 
+Die Definitionen der oben genannten Attribute ähnelt sich sehr, weshalb hier beispielhaft der Ausschnitt der Spielerdefinition erklärt wird. Ein Spieler soll in der DSL als "player" angeben sein, was hier als Schlüsselwort festgelegt wird. Anschließend folgen die geschweiften Klammern. Die Parserregel legt fest, dass ein Spieler Attribute innerhalb der geschweiften Klammern besitzt. Diese Attribute sind durch Kommata getrennt und beginnen immer mit ihrem Schlüsselwort und einem Doppelpunkt dahinter. \newline
+Der Wert des Attributs ist durch einen Verweis auf eines der möglichen Alphabete angegeben. Durch diese strukturelle Einschränkung werden Listener durch Antlr für jeden Attributwert erstellt. Dadurch ist es möglich beim Parsen im Syntaxbaum direkt an diesem Attribut "anzuhalten" und sich den Wert ausgeben zu lassen. Dies erleichtert die semantische Prüfung im Levelgenerator. Die andern Schlüsselattribute der NBNO-DSL sind nach dem gleichen Schema aufgebaut. 
+\begin{lstlisting}[caption={}\label{lst:},captionpos=t] 
+//the player and its attributes
+player: 'player' ObjectBeginn playerAttributes ObjectEnd ;
+playerAttributes:  speed Separator drinkSpeed Separator beerLevel;
+speed: 'speed:' speedValue;
+speedValue: DIGITS;
+drinkSpeed: 'drinkSpeed:' drinkSpeedValue;
+drinkSpeedValue: DIGITS;
+beerLevel: 'beerLevel:' beerLevelValue;
+beerLevelValue: DIGITS;
+\end{lstlisting}
 
 \subsection{Codegenerator}
+- modellinterpreter
+- Fehler Handling! (Extra n exception handler beigefügt)
+- Semantik Prüfung
+- level erzeugung per string maps 
+- methoden zur übersichtlichkeit und entkopplung aus anderen methoden zum erzeugen von strings
+- stream als java datei speichern
