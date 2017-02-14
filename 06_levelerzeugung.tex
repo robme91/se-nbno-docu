@@ -93,7 +93,7 @@ WS : [ \t\n\r]+ -> skip ; // skip witepsaces tabs and linebreaks
  
 Die Definitionen der oben genannten Attribute ähnelt sich sehr, weshalb hier beispielhaft der Ausschnitt der Spielerdefinition erklärt wird. Ein Spieler soll in der DSL als \texttt{player} angeben sein, was hier als Schlüsselwort festgelegt wird. Anschließend folgen die geschweiften Klammern. Die Parserregel legt fest, dass ein Spieler Attribute innerhalb der geschweiften Klammern besitzt. Diese Attribute sind durch Kommata getrennt und beginnen immer mit ihrem Schlüsselwort und einem Doppelpunkt dahinter. 
 
-Der Wert des Attributs ist durch einen Verweis auf eines der möglichen Alphabete angegeben. Durch diese strukturelle Einschränkung werden Listener durch Antlr für jeden Attributwert erstellt. Dadurch ist es möglich beim Parsen im Syntaxbaum direkt an diesem Attribut ``anzuhalten`` und sich den Wert ausgeben zu lassen. Dies erleichtert die semantische Prüfung im Levelgenerator. Die andern Schlüsselattribute der NBNO-DSL sind nach dem gleichen Schema aufgebaut. 
+Der Wert des Attributs ist durch einen Verweis auf eines der möglichen Alphabete angegeben. Durch diese strukturelle Einschränkung werden Listener durch Antlr für jeden Attributwert erstellt. Dadurch ist es möglich beim Parsen im Syntaxbaum direkt an diesem Attribut ``anzuhalten`` und sich den Wert ausgeben zu lassen. Dies erleichtert die semantische Prüfung im Levelgenerator. Die anderen Schlüsselattribute der NBNO-DSL sind nach dem gleichen Schema aufgebaut. 
 
 \todo{Caption und Label im Listing fehlen}
 \begin{lstlisting}[caption={}\label{lst:},captionpos=t, language=Java] 
@@ -114,7 +114,7 @@ Als Modellinterpretierer und damit Levelgenerator fungiert eine Java Klasse \tex
 
 Ein sehr wichtiger Bestandteil des Generators ist das Errorhandling. Die Antlr Parser und Lexer werfen standardisiert keine Fehler sondern geben lediglich auf der Konsole eine Nachricht aus, das ein Fehler beim Parsen aufgetreten ist. Gewünscht ist jedoch, dass der Levelgenerator fehlerhaft abbricht bei jeglicher Art eines Syntaxfehlers. Aus diesem Grund wird der Antlr ErrorListener beerbt und der eigene \texttt{LevelErrorListener} dem Parser und Lexer im Levelgenerator übergeben. Er überschreibt die bei einem Syntaxfehler aufgerufene Methode und kann so eine Exception werfen, die den Levelerzeugungsvorgang abbricht.
 
-Der Generator liest zu beginn eine .nbno-Datei aus dem \texttt{levelfiles} Projektverzeichnis ein, deren Dateiname über die Konsole übergeben wird. Dieses File wird dann geparst und auf Fehlerhafte Einträge oder Strukturen geprüft. Entspricht die Datei der Grammatik, wird eine Javaklasse mit dem in der Leveldatei spezifizierten Namen angelegt und gespeichert.
+Der Generator liest zu Beginn eine .nbno-Datei aus dem \texttt{levelfiles} Projektverzeichnis ein, deren Dateiname über die Konsole übergeben wird. Dieses File wird dann geparst und auf fehlerhafte Einträge oder Strukturen geprüft. Entspricht die Datei der Grammatik, wird eine Javaklasse mit dem in der Leveldatei spezifizierten Namen angelegt und gespeichert.
 
 Durch das Metamodell ist die syntaktische Analyse bereits abgedeckt, weshalb im Generator die semantische Prüfung fokussiert wird. Dafür werden die erzeugten Listener Methoden für die Attribute und Attributwerte überschrieben. Im folgenden Codeauszug (vgl. Listing \ref{lst:codegen-lvlName}) wird der Levelname auf Länge (maximal 100 Zeichen) geprüft. Des Weiteren wird bei Korrektheit das erste Zeichen zu einem Großbuchstaben gewandelt, so dass die Javaklasse den Javakonventionen entspricht. Ist der Levelname zu lang, so wird ein Fehler geworfen und der Generierungsvorgang abgebrochen.
 
@@ -130,9 +130,9 @@ public void enterLevelNameValue(LevelGrammarParser.LevelNameValueContext ctx) {
 }
 \end{lstlisting}
 
-Die weiteren Attribute und Eigenschaften werden auf die gleiche Art und Weise geprüft. Beispielsweise wird die Geschwindigkeit des Spielers auf einen Wertebereich zwischen 0 und 100 in der überschriebenen Methode \textit{enterSpeedValue()} geprüft. So ist gewährleistet das am Ende alle Attribute auch die inhaltlich korrekten Werte enthalten. 
+Die weiteren Attribute und Eigenschaften werden auf die gleiche Art und Weise geprüft. Beispielsweise wird die Geschwindigkeit des Spielers auf einen Wertebereich zwischen 0 und 100 in der überschriebenen Methode \texttt{enterSpeedValue()} geprüft. So ist gewährleistet das am Ende alle Attribute auch die inhaltlich korrekten Werte enthalten. 
 
-Eine weitere Interessante Prüfung geschieht bei der Spielkartenanalyse (vgl. Listing \ref{lst:codegen-mapCheck}). Die Map muss immer genau 20 Zeilen und 25 Spalten enthalten. Wobei Spalten in diesem Projekt als Blöcke interpretiert werden. Ein Block wird im Spiel zu einem 32x32 Pixel Block umgerechnet. Auf diese Weise besitzt das Spielfeld immer die gleiche Größe. Die Leveldateien müssten so auch nicht bearbeitet werden, falls die Größen im Spiel einmal skaliert werden sollten.
+Eine weitere interessante Prüfung geschieht bei der Spielkartenanalyse (vgl. Listing \ref{lst:codegen-mapCheck}). Die Map muss immer genau 20 Zeilen und 25 Spalten enthalten. Wobei Spalten in diesem Projekt als Blöcke interpretiert werden. Ein Block wird im Spiel zu einem 32x32 Pixel Block umgerechnet. Auf diese Weise besitzt das Spielfeld immer die gleiche Größe. Die Leveldateien müssten so auch nicht bearbeitet werden, falls die Größen im Spiel einmal skaliert werden sollten.
 
 \begin{lstlisting}[caption={Codegenerator: Map Prüfung}\label{lst:codegen-mapCheck},captionpos=t,language=Java, firstnumber=230]
 @Override

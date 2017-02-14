@@ -12,11 +12,11 @@ Ein Lexer vollzieht die lexikalische Analyse. Das bedeutet, er unterteilt den ei
 
 Der Parser hingegen erstellt aus der gegebenen Datei und den erzeugten Tokens eine Struktur, die im Fall von Antlr, als Syntaxbaum sichtbar\todo{sichtbar passt nicht ganz} gemacht wird. So kann jede beliebige Datei anhand dieses Syntaxbaums auf die korrekte Struktur hin überprüft werden. \footnote{http://www.itwissen.info/definition/lexikon/Parser-parser.html, 12.02.2016}
 
-Die Kombination aus Lexer und Parser ermittelt die syntaktische Korrektheit des gegeben Textes. Sollte ein Fehler auftreten kann anhand der vergebenen Tokens die genaue Zeile und Spalte in der gegebenen Datei bestimmt werden. Ist die Datei vollständig in Tokens zerlegbar und stimmt die Struktur mit den Parserregeln überein, gilt die Datei als korrekt und kann benutzt werden.
+Die Kombination aus Lexer und Parser ermittelt die syntaktische Korrektheit des gegebenen Textes. Sollte ein Fehler auftreten kann anhand der vergebenen Tokens die genaue Zeile und Spalte in der gegebenen Datei bestimmt werden. Ist die Datei vollständig in Tokens zerlegbar und stimmt die Struktur mit den Parserregeln überein, gilt die Datei als korrekt und kann benutzt werden.
 
 Um die Regeln für den Lexer und Parser festzulegen, schreibt der Entwickler eine, auf der \textit{Erweiterten Backus-Naur-Form (EBNF)} basierende, Grammatik und generiert mittels Antlr hieraus die Lexer- und Parserklassen. Durch Antlr werden in diesem Vorgang ebenfalls Listener erstellt, die benutzt werden können, um an bestimmten Stellen beim Parsen der Datei Zugriff auf die aktuelle Struktur und Daten zu erhalten. So kann der Programmierer semantische Prüfungen der Daten durchführen und entsprechend auf korrekte oder fehlerhafte Eingaben reagieren.
 
-Um mit Antlr Code generieren zu können, ist\todo{kann statt ist} in IntelliJ IDEA das Antlr Plugin zu installieren. Durch Ausführen des Plugins auf der Grammatik wird der gewünschte Java Code erstellt.
+Um mit Antlr Code generieren zu können, ist \todo{kann statt ist} in IntelliJ IDEA das Antlr Plugin zu installieren. Durch Ausführen des Plugins auf der Grammatik wird der gewünschte Java Code erstellt.
 
 Weitere Einstellungen sind über die Konfiguration des Plugins möglich. Hier wird beispielsweise festgelegt, wohin die Lexer und Parser Dateien generiert werden sollen oder in welcher Programmiersprache diese Dateien erstellt werden. 
 Sind die Lexer und Parser in das Sourcecodeverzeichnis eingebunden, so können sie in einem Java Programm aufgerufen und ausgeführt werden.

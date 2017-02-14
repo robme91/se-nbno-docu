@@ -8,7 +8,7 @@ Slick2D stellt Techniken zur Umsetzung eines zustandsbasierten Spieles zur Verf�
 In Abbildung \ref{fig:spielarchitektur:states} werden die Zustände des Spiels und ihre Reihenfolge gezeigt.
 
 Ein Spiel startet im \texttt{MainMenuState}.
-Hier kann der Spieler das Spiel entweder direkt beenden oder in den \textit{LevelMenuState} wechseln.
+Hier kann der Spieler das Spiel entweder direkt beenden oder in den \texttt{LevelMenuState} wechseln.
 Der \texttt{LevelMenuState} bietet eine Auswahl aller zur Verfügung stehenden Levels an, welche dann im \texttt{PlayingState} gespielt werden können.
 Während des Spiels kann das Spiel durch Wechsel in den \texttt{PauseMenuState} pausiert werden.
 Nach erfolgreichem oder nicht erfolgreichem Abschluss eines Levels bietet der \texttt{GameFinishState} die Möglichkeit das Level zu wechseln, das Level erneut zu spielen oder das Spiel zu beenden.
@@ -50,9 +50,9 @@ In der Klasse \texttt{GameObject} in Abbildung \ref{fig:spielarchitektur:model} 
 Um die Level unabhängig von der Pixelgröße des Ausgabefensters und der Blockgröße zu gestalten, entsprechen diese Positionsangaben zunächst einfachen Indexwerten.
 Die Indexwerte entsprechen der Position des entsprechenden Spielobjekts vom oberen linken Spielfeldrand aus.
 Es werden zunächst alle Blockindexwerte mit den korrekten pixelbasierten Positionen aktualisiert.
-In der aktuellen Implemntierung weisen Blöcke der Karte eine feste Größe von 32x32 Pixeln auf.
+In der aktuellen Implementierung weisen Blöcke der Karte eine feste Größe von 32x32 Pixeln auf.
 
-Ebenfalls muss Der Typ von \texttt{Street}-Objekten, also ob es sich hierbei beispielsweise um eine Kreuzung oder einer geraden Straße handelt, ermittelt werden.
+Ebenfalls muss der Typ von \texttt{Street}-Objekten, also ob es sich hierbei beispielsweise um eine Kreuzung oder eine geraden Straße handelt, ermittelt werden.
 Dazu wird während der Initialisierung eine Karte der Straßenobjekte in Form eines zweidimensionalen \texttt{boolean[][]}-Arrays erzeugt.
 Anhand dieser Karte können nun, für jedes \texttt{Street}-Objekt einzeln, die Nachbarn ermittelt und der korrekte Straßentyp und eine eventuelle Rotation festgestellt werden.
 
