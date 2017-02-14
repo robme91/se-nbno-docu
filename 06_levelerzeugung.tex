@@ -1,15 +1,19 @@
 \section{Levelerzeugung}\label{sec:levelerzeugung}
 
-In diesem Abschnitt wird das Projekt des Levelgenerators näher erläutert. Die Schwerpunkte liegen dabei auf dem Level Metamodell sowie auf der Codegenerierung aus einer gegebenen Leveldatei. \newline 
-Dabei wird erläutert, wie eine textuelle Leveldatei aussehen muss. Anschließend wird das Metamodell, das diese  Domain Specific Language (DSL) beschreibt, verständlich dargestellt.\newline
+In diesem Abschnitt wird das Projekt des Levelgenerators näher erläutert. Die Schwerpunkte liegen dabei auf dem Level Metamodell sowie auf der Codegenerierung aus einer gegebenen Leveldatei. 
+ 
+Dabei wird erläutert, wie eine textuelle Leveldatei aussehen muss. Anschließend wird das Metamodell, das diese  Domain Specific Language (DSL) beschreibt, verständlich dargestellt.
+
 Abschließend wird in diesem Kapitel der Levelgenerator vorgestellt, mit Augenmerk auf seinen Aufbau und seine Funktionsweise.
 
 \subsection{Aufbau einer nbno-Datei}
-Um ein Level mit dem Levelgenerator zu erzeugen, muss eine textuelle Datei im NBNO Format an den Generator übergeben werden. Eine solche Datei besitzt eine durch die DSL fest vorgegebene Struktur. Diese wird durch die benötigten Levelattribute und Eigenschaften bestimmt.\newline
-Zunächst enthält ein Level einen Namen und Levelkonfigurationen (vgl. Listing \ref{lst:nbno-lvlConfig}). Der bisherige Projektstand benötigt als Leveleigenschaft nur die Spielzeit des Levels (entspricht dem rechten Balken des Spiels (vgl. Abb. \ref{fig:einleitung:screenshot})).\newline
+Um ein Level mit dem Levelgenerator zu erzeugen, muss eine textuelle Datei im NBNO Format an den Generator übergeben werden. Eine solche Datei besitzt eine durch die DSL fest vorgegebene Struktur. Diese wird durch die benötigten Levelattribute und Eigenschaften bestimmt.
+
+Zunächst enthält ein Level einen Namen und Levelkonfigurationen (vgl. Listing \ref{lst:nbno-lvlConfig}). Der bisherige Projektstand benötigt als Leveleigenschaft nur die Spielzeit des Levels (entspricht dem rechten Balken des Spiels (vgl. Abb. \ref{fig:einleitung:screenshot})).
+
 Der Spieler selbst erhält Eigenschaften die seine Geschwindigkeit, seine Trinkgeschwindigkeit und das initiale Bierlevel einstellen. Wobei das Bierlevel dem linken Balken entspricht (vgl. Abb. \ref{fig:einleitung:screenshot}) und die Trinkgeschwindigkeit die Geschwindigkeit der Leerung dieses Balkens bestimmt.
 
-\begin{lstlisting}[caption={Level Metadaten und Spieler}\label{lst:nbno-lvlConfig},captionpos=t]
+\begin{lstlisting}[caption={Level Metadaten und Spieler}\label{lst:nbno-lvlConfig},captionpos=t, language=Java]
 levelName: TestName
 levelConfiguration {
     levelTime: 40
@@ -21,10 +25,12 @@ player {
 }
 \end{lstlisting}
 
-An diesem Auszug ist der Aufbau einer nbno-Datei bereits zu erkennen. Bestimmte Attribute besitzen Eigenschaften die angelehnt an das JSON-Format in geschweiften Klammern aufgelistet werden. Separiert werden diese Eigenschaften durch Kommata.\newline
-Dies ist auch im nächsten Auszug gut zu erkennen. Es werden die Gegnerklassen angelegt und mit bestimmten Eigenschaften ausgestattet (vgl. Listing \ref{lst:nbno-enemies}). Es wird ein Name an die Klassen verteilt, durch den zur Laufzeit eine passende Darstellung des Charakters erreicht wird. Weitere Eigenschaften sind die Geschwindigkeit, das Angriffsziel und der Schaden des Gegners. Die künstliche Intelligenz des Gegenspielers wird hier ebenfalls vergeben. Dabei ist die erste Zahl die Sichtweite des Charakters und die Zweite die Wahrscheinlichkeitsangabe, wie oft der Gegner seine Richtung ändert (Die KI wurde genauer erläutert in \ref{sec:levelcontroller}).\newline
+An diesem Auszug ist der Aufbau einer nbno-Datei bereits zu erkennen. Bestimmte Attribute besitzen Eigenschaften die angelehnt an das JSON-Format in geschweiften Klammern aufgelistet werden. Separiert werden diese Eigenschaften durch Kommata.
+
+Dies ist auch im nächsten Auszug gut zu erkennen. Es werden die Gegnerklassen angelegt und mit bestimmten Eigenschaften ausgestattet (vgl. Listing \ref{lst:nbno-enemies}). Es wird ein Name an die Klassen verteilt, durch den zur Laufzeit eine passende Darstellung des Charakters erreicht wird. Weitere Eigenschaften sind die Geschwindigkeit, das Angriffsziel und der Schaden des Gegners. Die künstliche Intelligenz des Gegenspielers wird hier ebenfalls vergeben. Dabei ist die erste Zahl die Sichtweite des Charakters und die Zweite die Wahrscheinlichkeitsangabe, wie oft der Gegner seine Richtung ändert (Die KI wurde genauer erläutert in \ref{sec:levelcontroller}).
+
 %TODO mach richtige referenzierung auf kapitel
-\begin{lstlisting}[caption={Gegnerklassen}\label{lst:nbno-enemies},captionpos=t]
+\begin{lstlisting}[caption={Gegnerklassen}\label{lst:nbno-enemies},captionpos=t, language=Java]
 enemies {
     1 {
         name: Schnorrer,
@@ -43,10 +49,11 @@ enemies {
 }
 \end{lstlisting}
 
-Wichtig sind auch die Ziffern vor den eigentlichen Gegnereigenschaften. Sie stellen die Repräsentation auf der Map dar, die in der Leveldatei angelegt wird (vgl. Listing \ref{lst:nbno-map}). Der Ausschnitt zeigt einige Zeilen einer Map Konfiguration. Die Map wird durch Buchstaben und Ziffern repräsentiert, wobei jedes Zeichen dabei eine eigene Bedeutung hat. Die zuvor erwähnten Ziffern der Gegner stellen hier die Startpositionen eines Gegners der entsprechenden Klasse dar. Auf diese Weise ist es möglich, von einer Klasse mehrere Feinde starten zu lassen.\newline
-Das "X" ist die Startposition des Spielers. Ein "H" steht für ein Haus, ein "P" für ein Block Park und das "S" ist das Symbol für eine Straße. Die Spätis werden per Pfeilspitze dargestellt. Je nachdem in welche Richtung die Spitze zeigt, öffnet sich der Späti im Spiel und kann vom Spieler angelaufen werden. In diesem Beispiel bedeutet demnach das "V", dass der Späti sich nach unten öffnet. \newline
-\begin{minipage}{\linewidth}
-\begin{lstlisting}[caption={Level Map}\label{lst:nbno-map},captionpos=t] 
+Wichtig sind auch die Ziffern vor den eigentlichen Gegnereigenschaften. Sie stellen die Repräsentation auf der Map dar, die in der Leveldatei angelegt wird (vgl. Listing \ref{lst:nbno-map}). Der Ausschnitt zeigt einige Zeilen einer Map Konfiguration. Die Map wird durch Buchstaben und Ziffern repräsentiert, wobei jedes Zeichen dabei eine eigene Bedeutung hat. Die zuvor erwähnten Ziffern der Gegner stellen hier die Startpositionen eines Gegners der entsprechenden Klasse dar. Auf diese Weise ist es möglich, von einer Klasse mehrere Feinde starten zu lassen.
+
+Das ``X`` ist die Startposition des Spielers. Ein ``H`` steht für ein Haus, ein ``P`` für ein Block Park und das ``S`` ist das Symbol für eine Straße. Die Spätis werden per Pfeilspitze dargestellt. Je nachdem in welche Richtung die Spitze zeigt, öffnet sich der Späti im Spiel und kann vom Spieler angelaufen werden. In diesem Beispiel bedeutet demnach das ``V``, dass der Späti sich nach unten öffnet.
+
+\begin{lstlisting}[caption={Level Map}\label{lst:nbno-map},captionpos=t, language=Java] 
 map {
     H,H,H,H,H,H,H,H,H,H,S,S,S,S,S,S,S,S,S,S,S,S,S,S,S
     P,P,S,S,S,S,S,S,2,H,S,S,S,S,S,S,1,S,S,S,S,S,S,S,S
@@ -56,15 +63,17 @@ map {
     S,S,S,S,S,S,S,S,S,S,S,X,S,S,S,S,S,S,S,S,S,S,S,S,S
 }
 \end{lstlisting}
-\end{minipage}
 
 \subsection{Metamodell eines Levels}
 %TODO syntax highlighting für ebnf
-Das Metamodell dieses Projekts beschreibt die Struktur und den Aufbau eines Levels des Spiels. Das Modell ist in EBNF verfasst und generiert durch Antlr die Compiler für die gewünschte NBNO-DSL.\newline
-Die DSL muss immer gleich aufgebaut sein (vgl. Listing \ref{lst:grammar-structure}). Es muss mit dem Levelnamen begonnen werden und anschließend die Levelkonfigurationen festgelegt werden. Danach folgt der Spieler und die Gegnerklassen. Abschließend muss ein Spielfeld definiert werden.\newline
+Das Metamodell dieses Projekts beschreibt die Struktur und den Aufbau eines Levels des Spiels. Das Modell ist in EBNF verfasst und generiert durch Antlr die Compiler für die gewünschte NBNO-DSL.
+
+Die DSL muss immer gleich aufgebaut sein (vgl. Listing \ref{lst:grammar-structure}). Es muss mit dem Levelnamen begonnen werden und anschließend die Levelkonfigurationen festgelegt werden. Danach folgt der Spieler und die Gegnerklassen. Abschließend muss ein Spielfeld definiert werden.
+
 Um Wiederholungen zu vermeiden, sind Lexerregeln aufgestellt, die Alphabete und Trenner festgelegen.
 Außerdem ist eingestellt, dass alle Leerzeichen und Abstände beim Parsen übersprungen werden.
-\begin{lstlisting}[caption={Aufbau und Tokens der DSL}\label{lst:grammar-structure},captionpos=t] 
+
+\begin{lstlisting}[caption={Aufbau und Tokens der DSL}\label{lst:grammar-structure},captionpos=t, language=Java] 
 file : levelName levelConfigs player enemies map EOF;
 
 // helper definitions
@@ -76,9 +85,11 @@ Separator: ',';
 WS : [ \t\n\r]+ -> skip ; // skip witepsaces tabs and linebreaks
 \end{lstlisting}
  
-Die Definitionen der oben genannten Attribute ähnelt sich sehr, weshalb hier beispielhaft der Ausschnitt der Spielerdefinition erklärt wird. Ein Spieler soll in der DSL als "player" angeben sein, was hier als Schlüsselwort festgelegt wird. Anschließend folgen die geschweiften Klammern. Die Parserregel legt fest, dass ein Spieler Attribute innerhalb der geschweiften Klammern besitzt. Diese Attribute sind durch Kommata getrennt und beginnen immer mit ihrem Schlüsselwort und einem Doppelpunkt dahinter. \newline
-Der Wert des Attributs ist durch einen Verweis auf eines der möglichen Alphabete angegeben. Durch diese strukturelle Einschränkung werden Listener durch Antlr für jeden Attributwert erstellt. Dadurch ist es möglich beim Parsen im Syntaxbaum direkt an diesem Attribut "anzuhalten" und sich den Wert ausgeben zu lassen. Dies erleichtert die semantische Prüfung im Levelgenerator. Die andern Schlüsselattribute der NBNO-DSL sind nach dem gleichen Schema aufgebaut. 
-\begin{lstlisting}[caption={}\label{lst:},captionpos=t] 
+Die Definitionen der oben genannten Attribute ähnelt sich sehr, weshalb hier beispielhaft der Ausschnitt der Spielerdefinition erklärt wird. Ein Spieler soll in der DSL als \texttt{player} angeben sein, was hier als Schlüsselwort festgelegt wird. Anschließend folgen die geschweiften Klammern. Die Parserregel legt fest, dass ein Spieler Attribute innerhalb der geschweiften Klammern besitzt. Diese Attribute sind durch Kommata getrennt und beginnen immer mit ihrem Schlüsselwort und einem Doppelpunkt dahinter. 
+
+Der Wert des Attributs ist durch einen Verweis auf eines der möglichen Alphabete angegeben. Durch diese strukturelle Einschränkung werden Listener durch Antlr für jeden Attributwert erstellt. Dadurch ist es möglich beim Parsen im Syntaxbaum direkt an diesem Attribut ``anzuhalten`` und sich den Wert ausgeben zu lassen. Dies erleichtert die semantische Prüfung im Levelgenerator. Die andern Schlüsselattribute der NBNO-DSL sind nach dem gleichen Schema aufgebaut. 
+
+\begin{lstlisting}[caption={}\label{lst:},captionpos=t, language=Java] 
 //the player and its attributes
 player: 'player' ObjectBeginn playerAttributes ObjectEnd ;
 playerAttributes:  speed Separator drinkSpeed Separator beerLevel;
@@ -92,11 +103,14 @@ beerLevelValue: DIGITS;
 
 \subsection{Levelgenerator}
 
-Als Modellinterpretierer und damit Levelgenerator fungiert eine Java Klasse "LevelGenerator.java". In ihr werden die durch Antlr erzeugten Lexer und Parser ausgeführt, eine semantische Prüfung der übergebenen Daten vollzogen und abschließend eine Java Leveldatei erzeugt.\newline
-Ein sehr wichtiger Bestandteil des Generators ist das Errorhandling. Die Antlr Parser und Lexer werfen standardisiert keine Fehler sondern geben lediglich auf der Konsole eine Nachricht aus, das ein Fehler beim Parsen aufgetreten ist. Gewünscht ist jedoch, dass der Levelgenerator fehlerhaft abbricht bei jeglicher Art eines Syntaxfehlers. Aus diesem Grund wird der Antlr ErrorListener beerbt und der eigene "LevelErrorListener" dem Parser und Lexer im Levelgenerator übergeben. Er überschreibt die bei einem Syntaxfehler aufgerufene Methode und kann so eine Exception werfen, die den Levelerzeugungsvorgang abbricht.\newline
-Der Generator liest zu beginn eine .nbno-Datei aus dem "levelfiles" Projektverzeichnis ein, deren Dateiname über die Konsole übergeben wird. Dieses File wird dann geparst und auf Fehlerhafte Einträge oder Strukturen geprüft. Entspricht die Datei der Grammatik, wird eine Java Klasse mit dem in der Leveldatei spezifizierten Namen angelegt und gespeichert.\newline
+Als Modellinterpretierer und damit Levelgenerator fungiert eine Java Klasse \texttt{LevelGenerator.java}. In ihr werden die durch Antlr erzeugten Lexer und Parser ausgeführt, eine semantische Prüfung der übergebenen Daten vollzogen und abschließend eine Java Leveldatei erzeugt.
+
+Ein sehr wichtiger Bestandteil des Generators ist das Errorhandling. Die Antlr Parser und Lexer werfen standardisiert keine Fehler sondern geben lediglich auf der Konsole eine Nachricht aus, das ein Fehler beim Parsen aufgetreten ist. Gewünscht ist jedoch, dass der Levelgenerator fehlerhaft abbricht bei jeglicher Art eines Syntaxfehlers. Aus diesem Grund wird der Antlr ErrorListener beerbt und der eigene \texttt{LevelErrorListener} dem Parser und Lexer im Levelgenerator übergeben. Er überschreibt die bei einem Syntaxfehler aufgerufene Methode und kann so eine Exception werfen, die den Levelerzeugungsvorgang abbricht.
+
+Der Generator liest zu beginn eine .nbno-Datei aus dem \texttt{levelfiles} Projektverzeichnis ein, deren Dateiname über die Konsole übergeben wird. Dieses File wird dann geparst und auf Fehlerhafte Einträge oder Strukturen geprüft. Entspricht die Datei der Grammatik, wird eine Java Klasse mit dem in der Leveldatei spezifizierten Namen angelegt und gespeichert.
+
 Durch das Metamodell ist die syntaktische Analyse bereits abgedeckt, weshalb im Generator die semantische Prüfung fokussiert wird. Dafür werden die erzeugten Listener Methoden für die Attribute und Attributwerte überschrieben. Im folgenden Codeauszug (vgl. Listing \ref{lst:codegen-lvlName}) wird der Levelname auf Länge (maximal 100 Zeichen) geprüft. Des Weiteren wird bei Korrektheit das erste Zeichen zu einem Großbuchstaben gewandelt, so dass die Javaklasse den Javakonventionen entspricht. Ist der Levelname zu lang, so wird ein Fehler geworfen und der Generierungsvorgang abgebrochen.
-\begin{minipage}{\linewidth}
+
 \begin{lstlisting}[caption={LevelGenerator: Levelnamensprüfung}\label{lst:codegen-lvlName},captionpos=t,language=Java, firstnumber=105]
 @Override
 public void enterLevelNameValue(LevelGrammarParser.LevelNameValueContext ctx) {
@@ -108,10 +122,11 @@ public void enterLevelNameValue(LevelGrammarParser.LevelNameValueContext ctx) {
   levelName = name.substring(0,1).toUpperCase() + name.substring(1);
 }
 \end{lstlisting}
-\end{minipage}
-Die weiteren Attribute und Eigenschaften werden auf die gleiche Art und Weise geprüft. Beispielsweise wird die Geschwindigkeit des Spielers auf einen Wertebereich zwischen 0 und 100 in der überschriebenen Methode \textit{enterSpeedValue()} geprüft. So ist gewährleistet das am Ende alle Attribute auch die inhaltlich korrekten Werte enthalten. \newline
-Eine weitere Interessante Prüfung geschieht bei der Spielkartenanalyse (vgl. Listing \ref{lst:codegen-mapCheck}). Die Map muss immer genau 20 Zeilen und 25 Spalten enthalten. Wobei Spalten in diesem Projekt als Blöcke interpretiert werden. Ein Block wird im Spiel zu einem 32x32 Pixel Block umgerechnet. Auf diese Weise besitzt das Spielfeld immer die gleiche Größe. Die Leveldateien müssten so auch nicht bearbeitet werden, falls die Größen im Spiel einmal skaliert werden sollten.\newline
-\begin{minipage}{\linewidth}
+
+Die weiteren Attribute und Eigenschaften werden auf die gleiche Art und Weise geprüft. Beispielsweise wird die Geschwindigkeit des Spielers auf einen Wertebereich zwischen 0 und 100 in der überschriebenen Methode \textit{enterSpeedValue()} geprüft. So ist gewährleistet das am Ende alle Attribute auch die inhaltlich korrekten Werte enthalten. 
+
+Eine weitere Interessante Prüfung geschieht bei der Spielkartenanalyse (vgl. Listing \ref{lst:codegen-mapCheck}). Die Map muss immer genau 20 Zeilen und 25 Spalten enthalten. Wobei Spalten in diesem Projekt als Blöcke interpretiert werden. Ein Block wird im Spiel zu einem 32x32 Pixel Block umgerechnet. Auf diese Weise besitzt das Spielfeld immer die gleiche Größe. Die Leveldateien müssten so auch nicht bearbeitet werden, falls die Größen im Spiel einmal skaliert werden sollten.
+
 \begin{lstlisting}[caption={Codegenerator: Map Prüfung}\label{lst:codegen-mapCheck},captionpos=t,language=Java, firstnumber=230]
 @Override
 public void enterMapValue(LevelGrammarParser.MapValueContext ctx) {
@@ -148,11 +163,13 @@ public void enterMapValue(LevelGrammarParser.MapValueContext ctx) {
   }
 }
 \end{lstlisting}
-\end{minipage}
 
-Ein weiteres Detail wird in dieser Methode ebenfalls sichtbar. Beim Durchlaufen der einzelnen Blöcke der Karte wird für jeden Block ein String angelegt. Diese Strings werden in einer Liste von Strings gesammelt.\newline
-Alle variablen Attribute, wie der Spieler oder die Gegnerklassen,  werden als Strings erzeugt. Wobei unter jedem Gegner und dem Spieler jeweils noch ein Straßenblock erzeugt werden muss. All diese erstellten Zeichenketten werden in Listen gespeichert. \newline
-Die Codegenerierung erfolgt am Ende durch das Zusammensetzen aller gespeicherten Strings. Alle Konstanten Angaben, wie der Import von Datentypen oder das Überschreiben des Konstruktors, werden zuvor in der Methode \textit{generateLevelClass()} mit den anderen variablen Strings in einer Liste zusammengeführt. Diese enthält dann die komplette Levelklasse als Stringrepräsentation.\newline 
-Über die final entstandene Stringliste wird in der \textit{writeFile()} Methode iteriert und für jeden String eine eigene Zeile in die neue Javaklasse geschrieben.
+Ein weiteres Detail wird in dieser Methode ebenfalls sichtbar. Beim Durchlaufen der einzelnen Blöcke der Karte wird für jeden Block ein String angelegt. Diese Strings werden in einer Liste von Strings gesammelt.
+
+Alle variablen Attribute, wie der Spieler oder die Gegnerklassen,  werden als Strings erzeugt. Wobei unter jedem Gegner und dem Spieler jeweils noch ein Straßenblock erzeugt werden muss. All diese erstellten Zeichenketten werden in Listen gespeichert. 
+
+Die Codegenerierung erfolgt am Ende durch das Zusammensetzen aller gespeicherten Strings. Alle Konstanten Angaben, wie der Import von Datentypen oder das Überschreiben des Konstruktors, werden zuvor in der Methode \texttt{generateLevelClass()} mit den anderen variablen Strings in einer Liste zusammengeführt. Diese enthält dann die komplette Levelklasse als Stringrepräsentation.
+ 
+Über die final entstandene Stringliste wird in der \texttt{writeFile()} Methode iteriert und für jeden String eine eigene Zeile in die neue Javaklasse geschrieben.
 
 Ist ein Level erfolgreich erstellt, muss diese Javadatei in das Spielprojekt in das \texttt{level} Package kopiert werden. Wird das Spiel dann gestartet steht das Level zur Verfügung. Dies ist das Bindeglied zwischen den zwei Projekten.

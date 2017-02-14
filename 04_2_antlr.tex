@@ -1,17 +1,22 @@
 \subsection{Antlr}
 
-Der Levelgenerator soll aus einer Textbasierten Datei eine Java Klasse erstellen. Dafür wird ein Parser, sowie ein Lexer benötigt. Um diese nicht selbst zu schreiben, wird das Werkzeug Antlr (v4) verwendet.\newline
-Antlr ist ein Quellcodegenerator, der Parser und Lexer in einer beliebigen Sprache erstellt. Die Dateien werden anhand einer vom Entwickler vorgegebenen Grammatik generiert. %\cite{http://www.antlr.org/about.html} 
-\newline
+Der Levelgenerator soll aus einer Textbasierten Datei eine Java Klasse erstellen. Dafür wird ein Parser, sowie ein Lexer benötigt. Um diese nicht selbst zu schreiben, wird das Werkzeug Antlr (v4) verwendet.
+
+Antlr ist ein Quellcodegenerator, der Parser und Lexer in einer beliebigen Sprache erstellt. Die Dateien werden anhand einer vom Entwickler vorgegebenen Grammatik generiert. \footnote{www.antlr.org/about.html, 12.02.2016} 
+
 %TODO quelle richtig einbinden
-Dabei ist wichtig zu verstehen, was ein Lexer und was ein Parser ist und tut. \newline
+Dabei ist wichtig zu verstehen, was ein Lexer und was ein Parser ist und tut. 
+
 Ein Lexer vollzieht die lexikalische Analyse. Das bedeutet, er unterteilt den eingegebenen Text in Einheiten, sogenannte Tokens. Dies können zum Beispiel Schlüsselwörter, Zahlen oder auch Zeichenketten sein. Aufgrund dieser Einteilung kann eine, zur Prüfung gegebene, Datei vollständig in diese Tokens zerlegt werden. 
-%\cite{https://en.wikipedia.org/wiki/Lexical_analysis} 
-\newline
-Der Parser hingegen erstellt aus der gegebenen Datei und den erzeugten Tokens eine Struktur, die im Fall von Antlr, als Syntaxbaum sichtbar gemacht wird. So kann jede beliebige Datei anhand dieses Syntaxbaums auf die korrekte Struktur hin überprüft werden. %\cite{https://en.wikipedia.org/wiki/Parsing#Computer_languages}
-\newline
-Die Kombination aus Lexer und Parser ermittelt die syntaktische Korrektheit des gegeben Textes. Sollte ein Fehler auftreten kann anhand der vergebenen Tokens die genaue Zeile und Spalte in der gegebenen Datei bestimmt werden. Ist die Datei vollständig in Tokens zerlegbar und stimmt die Struktur mit den Parser Regeln überein, gilt die Datei als korrekt und kann benutzt werden.\newline
-Um die Regeln für den Lexer und Parser festzulegen, schreibt der Entwickler eine, auf der Erweiterten Barkus-Nauer-Form(EBNF) basierende, Grammatik und generiert mittels Antlr hieraus die Lexer und Parser Dateien. Durch Antlr werden in diesem Vorgang ebenfalls Listener erstellt, die benutzt werden können, um an bestimmten Stellen beim Parsen der Datei Zugriff auf die aktuelle Struktur und Daten zu erhalten. So kann der Programmierer semantische Prüfungen der Daten durchführen und entsprechend auf korrekte oder fehlerhafte Eingaben reagieren.\newline
-Um mit Antlr Code generieren zu können, ist in IntelliJ IDEA das Antlr Plugin zu installieren. Durch Ausführen des Plugins auf der Grammatik wird der gewünschte Java Code erstellt.\newline
+\footnote{http://www2.math.uni-wuppertal.de/$\sim$axel/skripte/compiler/c1\_10\_1.html, 12.02.2016} 
+
+Der Parser hingegen erstellt aus der gegebenen Datei und den erzeugten Tokens eine Struktur, die im Fall von Antlr, als Syntaxbaum sichtbar gemacht wird. So kann jede beliebige Datei anhand dieses Syntaxbaums auf die korrekte Struktur hin überprüft werden. \footnote{http://www.itwissen.info/definition/lexikon/Parser-parser.html, 12.02.2016}
+
+Die Kombination aus Lexer und Parser ermittelt die syntaktische Korrektheit des gegeben Textes. Sollte ein Fehler auftreten kann anhand der vergebenen Tokens die genaue Zeile und Spalte in der gegebenen Datei bestimmt werden. Ist die Datei vollständig in Tokens zerlegbar und stimmt die Struktur mit den Parser Regeln überein, gilt die Datei als korrekt und kann benutzt werden.
+
+Um die Regeln für den Lexer und Parser festzulegen, schreibt der Entwickler eine, auf der Erweiterten Barkus-Nauer-Form(EBNF) basierende, Grammatik und generiert mittels Antlr hieraus die Lexer und Parser Dateien. Durch Antlr werden in diesem Vorgang ebenfalls Listener erstellt, die benutzt werden können, um an bestimmten Stellen beim Parsen der Datei Zugriff auf die aktuelle Struktur und Daten zu erhalten. So kann der Programmierer semantische Prüfungen der Daten durchführen und entsprechend auf korrekte oder fehlerhafte Eingaben reagieren.
+
+Um mit Antlr Code generieren zu können, ist in IntelliJ IDEA das Antlr Plugin zu installieren. Durch Ausführen des Plugins auf der Grammatik wird der gewünschte Java Code erstellt.
+
 Weitere Einstellungen sind über die Konfiguration des Plugins möglich. Hier wird beispielsweise festgelegt, wohin die Lexer und Parser Dateien generiert werden sollen oder in welcher Programmiersprache diese Dateien erstellt werden. 
 Sind die Lexer und Parser in das Sourcecodeverzeichnis eingebunden, so können sie in einem Java Programm aufgerufen und ausgeführt werden.
