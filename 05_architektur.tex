@@ -27,7 +27,7 @@ Der \texttt{LevelController} kontrolliert und steuert die Bestandteile eines Lev
 
 Jedes Level erbt von \texttt{AbstractLevel}.
 In Abbildung \ref{fig:spielarchitektur:abstractlevel} wird der Aufbau eines Levels deutlich.
-Ein Level besteht aus einer Menge an \texttt{NPC}-Objekten, welche die Gegner repräsentieren.
+Ein Level besteht aus einer Menge an \texttt{NPC}-Objekten (non-player character), welche die Gegner repräsentieren.
 Außerdem beinhaltet es ein \texttt{Player}-Objekt sowie die Menge der Blöcke(\texttt{Block}), also der Karte des Levels.
 Eine Übersicht über alle verwendbaren Spielobjekte wird in Abbildung \ref{fig:spielarchitektur:model} gegeben.
 Level sind komplexe Datentypen und verstehen sich als Komposition der, in Abbildung \ref{fig:spielarchitektur:model} gezeigten, spielspezifischen \texttt{GameObject} Datentypen.
@@ -50,6 +50,8 @@ In der Klasse \texttt{GameObject} in Abbildung \ref{fig:spielarchitektur:model} 
 Um die Level unabhängig von der Pixelgröße des Ausgabefensters und der Blockgröße zu gestalten, entsprechen diese Positionsangaben zunächst einfachen Indexwerten.
 Die Indexwerte entsprechen der Position des entsprechenden Spielobjekts vom oberen linken Spielfeldrand aus.
 Es werden zunächst alle Blockindexwerte mit den korrekten pixelbasierten Positionen aktualisiert.
+In der aktuellen Implemntierung weisen Blöcke der Karte eine feste Größe von 32x32 Pixeln auf.
+
 Ebenfalls muss Der Typ von \texttt{Street}-Objekten, also ob es sich hierbei beispielsweise um eine Kreuzung oder einer geraden Straße handelt, ermittelt werden.
 Dazu wird während der Initialisierung eine Karte der Straßenobjekte in Form eines zweidimensionalen \texttt{boolean[][]}-Arrays erzeugt.
 Anhand dieser Karte können nun, für jedes \texttt{Street}-Objekt einzeln, die Nachbarn ermittelt und der korrekte Straßentyp und eine eventuelle Rotation festgestellt werden.
@@ -62,7 +64,7 @@ Dies stellt die Interaktion zwischen zwei \texttt{GameObject} Instanzen sicher.
 Innerhalb der konkreten Implementierungen von \texttt{interact()} wird dann unter anderem durch Reflection entschieden, welche Aktionen durchgeführt werden sollen.
 In Listing \ref{lst:npc-interact} wird dies anhand der Implementierung der \texttt{interact()} Methode der Klasse \texttt{NPC} deutlich.
 Sobald ein Objekt getroffen wird, welches die Eigenschaft \texttt{isBlocking} aufweist, wird eine Zufallsrichtung gewählt.
-Wurde der \texttt{Player} getroffen, dann wird er, je nach spezifiziertem Angriffsziel, angegriffen und ein Timeout gesetzt, damit die Angriffe nicht direkt nacheinander erfolgen können.
+Wurde der \texttt{Player} getroffen, dann wird er, je nach spezifiziertem Angriffsziel, angegriffen und ein Timeout gesetzt um zu verhindern, dass Angriffe direkt nacheinander erfolgen können.
 
 \begin{lstlisting}[caption={NPC.interact() Implementierung}\label{lst:npc-interact},captionpos=t,language=Java]
 @Override
@@ -94,10 +96,12 @@ Aus diesem Grund unterteilt der \texttt{LevelController} Bewegungsintentionen in
 Dies sorgt auch dafür, dass Spielobjekte sauber an Kanten anderer Spielobjekte stehen bleiben und nicht beispielsweise wenige Pixel davor.
 
 
-\subsubsection{Künstliche Intelligenz der Gegner}
-\todo{stubs}
-- wird über zwei Werte spezifiziert.
-- \texttt{updateAI()}
-- Iteriert über alle NPC und zieht Linie zum Spieler
-- Wenn Sichtlinie kein \texttt{isBlocking} Hindernis schneidet wird geprüft ob Länge < Sichtlänge
-- Dabei ist die erste Zahl die Sichtweite des Charakters und die Zweite die Wahrscheinlichkeitsangabe, wahrscheinlich der Gegner auf gesehenes reagiert.
+\subsubsection{Künstliche Intelligenz der NPC}
+
+NPC sind in der Lage ihr Umfeld wahrzunehmen und daraus Bewegungsänderungen abzuleiten.
+Ihr Wahrnehmungsvermögen wird über zwei Kennzahlen gesteuert - Die Sichtweite und die ``Intelligenz''.
+Die Intelligenz ist hierbei eine Wahrscheinlichkeit, mit der auf Wahrgenommenes reagiert wird.
+Die \texttt{updateAI()} Methode iteriert über alle vorhandenen NPC und zieht jeweils eine Linie (Sichtlinie) zwischen dem entsprechenden NPC und dem Spieler.
+Sofern die Sichtlinie kein optisches Hindernis (Blöcke mit \texttt{isBlocking} Eigenschaft) schneidet, wird geprüft ob die Länge der Sichtlinie im Bereich der Sichtweite des NPC ist.
+Sofern dies der Fall ist, wird die beste Richtung zur Bewegung in Richtung des Spielers ermittelt.
+Der NPC übernimmt diese Richtung mit der Wahrscheinlichkeit seiner Intelligenz.
