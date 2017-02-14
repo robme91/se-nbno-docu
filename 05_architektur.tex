@@ -58,7 +58,7 @@ Anhand dieser Karte können nun, für jedes \texttt{Street}-Objekt einzeln, die 
 
 \subsubsection{Kollisionskontrolle}
 Der \texttt{LevelController} ermittelt Kollisionen zwischen \texttt{GameObject}-Objekten.
-Dazu wird die Methode \texttt{Shape.intersect(Shape)} aus der \textit{Slick2D}-Bibliothek verwendet, welche zwei geometrische Objekte auf eine Schnittmenge untersucht und \texttt{true} zurück liefert sobald eine Schnittmenge existiert.
+Dazu wird die Methode \texttt{Shape.intersect(Shape)} aus der Slick2D Bibliothek verwendet, welche zwei geometrische Objekte auf eine Schnittmenge untersucht und \texttt{true} zurück liefert sobald eine Schnittmenge existiert.
 In diesem Fall berühren sich beide \texttt{GameObject}-Objekte und es wird auf beiden die \texttt{GameObject.interact(GameObject)} Methode aufgerufen.
 Dies stellt die Interaktion zwischen zwei \texttt{GameObject} Instanzen sicher.
 Innerhalb der konkreten Implementierungen von \texttt{interact()} wird dann unter anderem durch Reflection entschieden, welche Aktionen durchgeführt werden sollen.
@@ -66,7 +66,7 @@ In Listing \ref{lst:npc-interact} wird dies anhand der Implementierung der \text
 Sobald ein Objekt getroffen wird, welches die Eigenschaft \texttt{isBlocking} aufweist, wird eine Zufallsrichtung gewählt.
 Wurde der \texttt{Player} getroffen, dann wird er, je nach spezifiziertem Angriffsziel, angegriffen und ein Timeout gesetzt um zu verhindern, dass Angriffe direkt nacheinander erfolgen können.
 
-\begin{lstlisting}[caption={NPC.interact() Implementierung}\label{lst:npc-interact},captionpos=t,language=Java]
+\begin{lstlisting}[caption={NPC.interact() Implementierung (NPC.java)}\label{lst:npc-interact},captionpos=t,language=Java]
 @Override
 public void interact(GameObject go) {
  if (go.isBlocking()) {
@@ -97,7 +97,7 @@ Dies sorgt auch dafür, dass Spielobjekte sauber an Kanten anderer Spielobjekte 
 
 
 \subsubsection{Künstliche Intelligenz der NPC}
-
+\label{subsub:architektur:ki}
 NPC sind in der Lage ihr Umfeld wahrzunehmen und daraus Bewegungsänderungen abzuleiten.
 Ihr Wahrnehmungsvermögen wird über zwei Kennzahlen gesteuert - Die Sichtweite und die ``Intelligenz''.
 Die Intelligenz ist hierbei eine Wahrscheinlichkeit, mit der auf Wahrgenommenes reagiert wird.
