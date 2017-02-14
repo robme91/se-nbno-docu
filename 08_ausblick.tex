@@ -1,9 +1,17 @@
 \section{Ausblick}
 
-- mehr verschiedene Blöcke
-- dynamische Spielfeldgröße (bei anpassbarem Fenster mit Scrolling)
-- Was hätte man mit mehr Zeit noch machen können?
-- Scaling auf Fullscreen, alles zu abhängig von Pixeln
-- Level Schwieirgkeiten und Level freischalten
-- weitere gegner klassen, parkbänke etc.
-- Konfiguration der späti ladezeit in dsl
+Im Folgenden Abschnitt finden sich Ideen und Anregungen zur Weiterentwicklung des Spiels bzw. der nbno-DSL.
+
+\subsubsection{Dynamische Spielfeldgröße}
+Wie in Listing \ref{lst:codegen-mapCheck} ersichtlich, ist die aktuelle Spielfeldgröße auf 20x25 Blöcke beschränkt.
+Wünschenswert wäre eine freie Spielfeldgröße.
+Das Fenster der Anwendung sollte dabei eine anpassbare Größe erhalten und ggf. scrollen.
+
+\subsubsection{Mehr Blöcke}
+Das hierarchisch aufgebaute Modell ermöglicht die Einbindung neuer Blocktypen.
+Um das Spiel abwechslungsreicher zu gestalten wären weitere Blocktypen, wie beispielsweise Parkbänke welche die Zeit schneller vergehen lassen, interessant.
+
+\subsubsection{Mehr Freiheit bei der Levelerzeugung}
+Derzeit sind viele, für die Spieldynamik relevante, Parameter noch statisch.
+Dazu gehören unter anderem die Zeit, die ein Späti braucht um wieder verfügbar zu sein.
+Um Levelentwicklern mehr Freiheit zu geben, ist eine (optionale) Auslagerung aller spielrelevanten Parameter in die nbno-DSL sinnvoll.
