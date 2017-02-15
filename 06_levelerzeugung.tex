@@ -2,11 +2,11 @@
 
 In diesem Abschnitt wird das Projekt des Levelgenerators näher erläutert. Die Schwerpunkte liegen dabei auf dem Level Metamodell sowie auf der Codegenerierung aus einer gegebenen Leveldatei. 
  
-Dabei wird erläutert, wie eine textuelle Leveldatei aussehen muss. Anschließend wird das Metamodell, das diese DSL beschreibt, verständlich dargestellt.
+Dabei wird erklärt, wie eine textuelle Leveldatei aussehen muss. Anschließend wird das Metamodell, das diese DSL beschreibt, verständlich dargestellt.
 
 Abschließend wird in diesem Kapitel der Levelgenerator vorgestellt, mit Augenmerk auf seinen Aufbau und seine Funktionsweise.
 
-\subsection{Aufbau einer nbno-Datei}
+\subsection{Aufbau einer NBNO-Datei}
 Um ein Level mit dem Levelgenerator zu erzeugen, muss eine textuelle Datei im NBNO Format an den Generator übergeben werden. Eine solche Datei besitzt eine durch die DSL fest vorgegebene Struktur. Diese wird durch die benötigten Levelattribute und Eigenschaften bestimmt.
 
 Zunächst enthält ein Level einen Namen und Levelkonfigurationen (vgl. Listing \ref{lst:nbno-lvlConfig}). Der bisherige Projektstand benötigt als Leveleigenschaft nur die Spielzeit des Levels (entspricht dem rechten Balken des Spiels (vgl. Abb. \ref{fig:einleitung:screenshot})).
@@ -25,13 +25,13 @@ player {
 }
 \end{lstlisting}
 
-An diesem Auszug ist der Aufbau einer nbno-Datei bereits zu erkennen.
+An diesem Auszug ist der Aufbau einer NBNO-Datei bereits zu erkennen.
 Bestimmte Attribute besitzen Eigenschaften die angelehnt an das JSON-Format in geschweiften Klammern aufgelistet werden. Separiert werden diese Eigenschaften durch Kommata.
 
 Dies ist auch im nächsten Auszug gut zu erkennen.
 Es werden die Gegnerklassen angelegt und mit bestimmten Eigenschaften ausgestattet (vgl. Listing \ref{lst:nbno-enemies}).
-Es wird ein Name an die Klassen verteilt, durch den zur Laufzeit eine passende Darstellung des Charakters erreicht wird.
-Weitere Eigenschaften sind die Geschwindigkeit, das Angriffsziel und die Effektivität des Angriffs(Schaden).
+Es wird ein Name an diese Klassen verteilt, durch den zur Laufzeit eine passende Darstellung des Charakters erreicht wird.
+Weitere Eigenschaften sind die Geschwindigkeit, das Angriffsziel und die Effektivität des Angriffs (Schaden).
 Die künstliche Intelligenz des Gegenspielers wird hier ebenfalls vergeben.
 Dabei gibt die erste Zahl seine Sichtweite an und die Zweite die Angabe der Wahrscheinlichkeit einer Richtungsänderung des Charakters. (Die KI wurde in Abschnitt \ref{subsub:architektur:ki} genauer erläutert).
 
@@ -54,7 +54,7 @@ enemies {
 }
 \end{lstlisting}
 
-Wichtig sind auch die Ziffern vor den eigentlichen Gegnereigenschaften. Sie stellen die Repräsentation auf der Map dar, die in der Leveldatei angelegt wird (vgl. Listing \ref{lst:nbno-map}). Der Ausschnitt zeigt einige Zeilen einer Map-Konfiguration. Die Map wird durch Buchstaben und Ziffern repräsentiert, wobei jedes Zeichen dabei eine eigene Bedeutung hat. Die zuvor erwähnten Ziffern der Gegner stellen hier die Startpositionen eines Gegners der entsprechenden Klasse dar. Auf diese Weise ist es möglich, von einer Klasse mehrere Feinde starten zu lassen.
+Wichtig sind auch die Ziffern vor den eigentlichen Gegnereigenschaften. Sie stellen die Repräsentation auf der Map dar, die in der Leveldatei angelegt wird (vgl. Listing \ref{lst:nbno-map}). Der Ausschnitt zeigt einige Zeilen einer Map-Konfiguration. Die Spielkarte wird durch Buchstaben und Ziffern repräsentiert, wobei jedes Zeichen dabei eine eigene Bedeutung hat. Die zuvor erwähnten Ziffern der Gegner stellen hier die Startpositionen eines Gegners der entsprechenden Klasse dar. Auf diese Weise ist es möglich, von einer Klasse mehrere Feinde starten zu lassen.
 
 Das ``X'' ist die Startposition des Spielers. Ein ``H'' steht für ein Haus, ein ``P'' für einen Park und das ``S'' ist das Symbol für eine Straße. Die Spätis werden per Pfeilspitze dargestellt. Je nachdem in welche Richtung die Spitze zeigt, öffnet sich der Späti im Spiel und kann vom Spieler angelaufen werden. In diesem Beispiel bedeutet demnach das ``V'', dass der Späti sich nach unten öffnet.
 
@@ -107,13 +107,13 @@ beerLevelValue: DIGITS;
 
 \subsection{Levelgenerator}
 
-Als Modellinterpretierer und damit Levelgenerator fungiert eine Java Klasse \texttt{LevelGenerator.java}. In ihr werden die durch Antlr erzeugten Lexer und Parser ausgeführt, eine semantische Prüfung der übergebenen Daten vollzogen und abschließend eine Java Leveldatei erzeugt.
+Als Modellinterpretierer und damit Levelgenerator fungiert eine Java Klasse \texttt{LevelGenerator.java}. In ihr werden die durch Antlr erzeugten Lexer und Parser ausgeführt, eine semantische Prüfung der übergebenen Daten vollzogen und abschließend eine Java Leveldatei erzeugt. Diese Levelklasse beerbt das in Abschnitt \ref{sub:architektur:level} beschriebene \texttt{AbstractLevel}. Auf diese Weise kann ein erzeugtes Level einfach mittels Reflection im NBNO-Projekt eingebunden werden, ohne das Änderungen im Quellcode des Spiels von Nöten sind.
 
-Ein sehr wichtiger Bestandteil des Generators ist das Errorhandling. Die Antlr Parser und Lexer werfen standardisiert keine Fehler sondern geben lediglich auf der Konsole eine Nachricht aus, das ein Fehler beim Parsen aufgetreten ist. Gewünscht ist jedoch, dass der Levelgenerator fehlerhaft abbricht bei jeglicher Art eines Syntaxfehlers. Aus diesem Grund wird der Antlr ErrorListener beerbt und der eigene \texttt{LevelErrorListener} dem Parser und Lexer im Levelgenerator übergeben. Er überschreibt die bei einem Syntaxfehler aufgerufene Methode und kann so eine Exception werfen, die den Levelerzeugungsvorgang abbricht.
+Ein sehr wichtiger Bestandteil des Generators ist das \mbox{Errorhandling}. Die Antlr Parser und Lexer werfen standardisiert keine Fehler sondern geben lediglich auf der Konsole eine Nachricht aus, das ein Fehler beim Parsen aufgetreten ist. Gewünscht ist jedoch, dass der Levelgenerator die Erzeugung, bei jeglicher Art eines Fehlers, mit einer Java-Exception abbricht. Aus diesem Grund wird der Antlr \texttt{BaseErrorListener} beerbt und der eigene \texttt{LevelErrorListener} dem Parser und Lexer im Levelgenerator übergeben. Er überschreibt, die bei einem Syntaxfehler aufgerufene Methode und kann so eine Exception werfen, die den Levelerzeugungsvorgang abbricht.
 
-Der Generator liest zu Beginn eine .nbno-Datei aus dem \texttt{levelfiles} Projektverzeichnis ein, deren Dateiname über die Konsole übergeben wird. Dieses File wird dann geparst und auf fehlerhafte Einträge oder Strukturen geprüft. Entspricht die Datei der Grammatik, wird eine Javaklasse mit dem in der Leveldatei spezifizierten Namen angelegt und gespeichert.
+Der Generator liest zu Beginn eine NBNO-Datei aus dem \texttt{levelfiles} Projektverzeichnis ein, deren Dateiname über die Konsole übergeben wird. Dieses File wird dann geparst und auf fehlerhafte Einträge oder Strukturen geprüft. Entspricht die Datei der Grammatik, wird eine Javaklasse mit dem in der Leveldatei spezifizierten Namen angelegt und gespeichert.
 
-Durch das Metamodell ist die syntaktische Analyse bereits abgedeckt, weshalb im Generator die semantische Prüfung fokussiert wird. Dafür werden die erzeugten Listener Methoden für die Attribute und Attributwerte überschrieben. Im folgenden Codeauszug (vgl. Listing \ref{lst:codegen-lvlName}) wird der Levelname auf Länge (maximal 100 Zeichen) geprüft. Des Weiteren wird bei Korrektheit das erste Zeichen zu einem Großbuchstaben gewandelt, so dass die Javaklasse den Javakonventionen entspricht. Ist der Levelname zu lang, so wird ein Fehler geworfen und der Generierungsvorgang abgebrochen.
+Durch das Metamodell ist die syntaktische Analyse bereits abgedeckt, weshalb im Generator die semantische Prüfung fokussiert wird. Dafür werden die erzeugten Listener-Methoden für die Attribute und Attributwerte überschrieben. Im folgenden Codeauszug (vgl. Listing \ref{lst:codegen-lvlName}) wird der Levelname auf Länge (maximal 100 Zeichen) geprüft. Des weiteren wird bei Korrektheit das erste Zeichen zu einem Großbuchstaben gewandelt, so dass die Javaklasse den Javakonventionen entspricht. Ist der Levelname zu lang, so wird ein Fehler geworfen und der Generierungsvorgang abgebrochen.
 
 \begin{lstlisting}[caption={LevelGenerator: Levelnamensprüfung}\label{lst:codegen-lvlName},captionpos=t,language=Java, firstnumber=105]
 @Override
@@ -170,10 +170,10 @@ public void enterMapValue(LevelGrammarParser.MapValueContext ctx) {
 
 Ein weiteres Detail wird in dieser Methode ebenfalls sichtbar. Beim Durchlaufen der einzelnen Blöcke der Karte wird für jeden Block ein String angelegt. Diese Strings werden in einer Liste von Strings gesammelt.
 
-Alle variablen Attribute, wie der Spieler oder die Gegnerklassen,  werden als Strings erzeugt. Wobei unter jedem Gegner und dem Spieler jeweils noch ein Straßenblock erzeugt werden muss. All diese erstellten Zeichenketten werden in Listen gespeichert. 
+Alle variablen Attribute, wie der Spieler oder die Gegnerklassen,  werden als Strings erzeugt. Zu beachten ist, dass unter jedem Gegner und dem Spieler jeweils noch ein Straßenblock erzeugt werden muss. All diese erstellten Zeichenketten werden in Listen gespeichert. 
 
 Die Codegenerierung erfolgt am Ende durch das Zusammensetzen aller gespeicherten Strings. Alle Konstanten Angaben, wie der Import von Datentypen oder das Überschreiben des Konstruktors, werden zuvor in der Methode \texttt{generateLevelClass()} mit den anderen variablen Strings in einer Liste zusammengeführt. Diese enthält dann die komplette Levelklasse als Stringrepräsentation.
  
 Über die final entstandene Stringliste wird in der \texttt{writeFile()} Methode iteriert und für jeden String eine eigene Zeile in die neue Javaklasse geschrieben.
 
-Ist ein Level erfolgreich erstellt, muss diese Javadatei in das Spielprojekt in das \texttt{level} Package kopiert werden. Wird das Spiel dann gestartet steht das Level zur Verfügung. Dies ist das Bindeglied zwischen den zwei Projekten.
+Ist ein Level erfolgreich erstellt, muss diese Javadatei in das \texttt{level} Package des Spielprojekts kopiert werden. Wird das Spiel dann gestartet steht das Level zur Verfügung. Dies ist das Bindeglied zwischen den zwei Projekten.\todo{evtl. rausnehmen den bindegleidsatz}

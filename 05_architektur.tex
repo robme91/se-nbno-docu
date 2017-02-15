@@ -10,39 +10,60 @@ In Abbildung \ref{fig:spielarchitektur:states} werden die Zustände des Spiels u
 Ein Spiel startet im \texttt{MainMenuState}.
 Hier kann der Spieler das Spiel entweder direkt beenden oder in den \texttt{LevelMenuState} wechseln.
 Der \texttt{LevelMenuState} bietet eine Auswahl aller zur Verfügung stehenden Levels an, welche dann im \texttt{PlayingState} gespielt werden können.
-Während des Spiels kann das Spiel durch Wechsel in den \texttt{PauseMenuState} pausiert werden.
-Nach erfolgreichem oder nicht erfolgreichem Abschluss eines Levels bietet der \texttt{GameFinishState} die Möglichkeit das Level zu wechseln, das Level erneut zu spielen oder das Spiel zu beenden.
 
-\begin{figure}[]\centering\includegraphics[width=3in]{img/05_states.png}\caption{Übersicht der Zustände des Spiels}\label{fig:spielarchitektur:states}\end{figure}
+Während des Spiels kann es durch Wechsel in den \texttt{PauseMenuState} pausiert werden.
+Nach erfolgreichem oder nicht erfolgreichem Abschluss eines Levels bietet der \texttt{GameFinishState} die Möglichkeit das Level zu wechseln, es erneut zu spielen oder das Spiel zu beenden.
+
+\begin{figure}[]
+\centering
+\includegraphics[width=3in]{img/05_states.png}
+\caption{Übersicht der Zustände des Spiels}
+\label{fig:spielarchitektur:states}
+\end{figure}
 
 Im FMC-Diagramm in Abbildung \ref{fig:spielarchitektur:fmc} wird die Bedeutung des \texttt{PlayingState} sowie der Aufbau eines Levels deutlich.
 Der \texttt{PlayingState} empfängt die Eingaben des Spielers und reicht diese an den \texttt{LevelController} weiter.
 Der \texttt{LevelController} kontrolliert und steuert die Bestandteile eines Levels.
 
-\begin{figure}[]\centering\includegraphics[width=3in]{img/05_fmc.png}
-\caption{FMC Diagramm des Spiels}\label{fig:spielarchitektur:fmc}\end{figure}
+\begin{figure}[]
+\centering
+\includegraphics[width=3in]{img/05_fmc.png}
+\caption{FMC Diagramm des Spiels}
+\label{fig:spielarchitektur:fmc}
+\end{figure}
 
 \subsection{Level}
 \label{sub:architektur:level}
 
 Jedes Level erbt von \texttt{AbstractLevel}.
-In Abbildung \ref{fig:spielarchitektur:abstractlevel} wird der Aufbau eines Levels deutlich.
-Ein Level besteht aus einer Menge an \texttt{NPC}-Objekten (non-player character), welche die Gegner repräsentieren.
-Außerdem beinhaltet es ein \texttt{Player}-Objekt sowie die Menge der Blöcke(\texttt{Block}), also der Karte des Levels.
+In Abbildung \ref{fig:spielarchitektur:abstractlevel} ist der Aufbau eines Levels zu sehen.
+Ein Level besteht aus einer Menge von \texttt{NPC}-Objekten (non-player character), welche die Gegner repräsentieren.
+Außerdem beinhaltet es ein \texttt{Player}-Objekt sowie die Menge der Blöcke (\texttt{Block}), die die Karte des Levels darstellen.
+
 Eine Übersicht über alle verwendbaren Spielobjekte wird in Abbildung \ref{fig:spielarchitektur:model} gegeben.
 Level sind komplexe Datentypen und verstehen sich als Komposition der, in Abbildung \ref{fig:spielarchitektur:model} gezeigten, spielspezifischen \texttt{GameObject} Datentypen.
 Zur Vermeidung von Redundanz und zur klaren Trennung zwischen Modell und Controller wird die Steuerung der Elemente eines Levels durch den \texttt{LevelController} übernommen.
-Durch diese Trennung eignen sich Implementierungen von \texttt{AbstractLevel} sehr gut zur Erzeugung durch eine anwendungsspezifische Sprache.
+Durch diese Trennung eignen sich Implementierungen von \texttt{AbstractLevel} sehr gut zur Erzeugung durch eine DSL.
 
-\begin{figure}[]\centering\includegraphics[width=2in]{img/05_abstractlevel_uml.png}\caption{UML Darstellung der Klasse AbstractLevel}\label{fig:spielarchitektur:abstractlevel}\end{figure}
+\begin{figure}[]
+\centering
+\includegraphics[width=2in]{img/05_abstractlevel_uml.png}
+\caption{UML Darstellung der Klasse AbstractLevel}
+\label{fig:spielarchitektur:abstractlevel}
+\end{figure}
 
-\begin{figure}[]\centering\includegraphics[width=3in]{img/05_model.png}\caption{Spielobjekte}\label{fig:spielarchitektur:model}\end{figure}
+\begin{figure}[]
+\centering
+\includegraphics[width=3in]{img/05_model.png}
+\caption{Spielobjekte}
+\label{fig:spielarchitektur:model}
+\end{figure}
 
 \subsection{LevelController}
 \label{sub:architektur:levelcontroller}
 
 Der \texttt{LevelController} ist die funktionale Kernkomponente des Spiels.
-Zu den wichtigsten Funktionalitäten zählen die Initialisierung eines Levels, die Kollisionskontrolle innerhalb eines Levels sowie die Berechnung der künstlichen Intelligenz der NPCs.
+Zu den wichtigsten Funktionalitäten zählen die Initialisierung eines Levels, die Kollisionskontrolle zwischen Spielobjekten sowie die Berechnung der künstlichen Intelligenz der NPCs.
 Auf diese Funktionalitäten wird im Folgenden näher eingegangen.
 
 \subsubsection{Initialisierung des Levels}
@@ -64,7 +85,7 @@ Dies stellt die Interaktion zwischen zwei \texttt{GameObject} Instanzen sicher.
 Innerhalb der konkreten Implementierungen von \texttt{interact()} wird dann unter anderem durch Reflection entschieden, welche Aktionen durchgeführt werden sollen.
 In Listing \ref{lst:npc-interact} wird dies anhand der Implementierung der \texttt{interact()} Methode der Klasse \texttt{NPC} deutlich.
 Sobald ein Objekt getroffen wird, welches die Eigenschaft \texttt{isBlocking} aufweist, wird eine Zufallsrichtung gewählt.
-Wurde der \texttt{Player} getroffen, dann wird er, je nach spezifiziertem Angriffsziel, angegriffen und ein Timeout gesetzt um zu verhindern, dass Angriffe direkt nacheinander erfolgen können.
+Wurde der \texttt{Player} getroffen, dann wird er, gemäß dem spezifizierten Angriffsziel, geschädigt. Des weiteren wird ein Timeout gesetzt um zu verhindern, dass Angriffe direkt nacheinander erfolgen können.
 
 \begin{lstlisting}[caption={NPC.interact() Implementierung (NPC.java)}\label{lst:npc-interact},captionpos=t,language=Java]
 @Override
@@ -91,9 +112,9 @@ public void interact(GameObject go) {
 
 Slick2D ist bestrebt, in regelmäßigen Abständen die implementierte Spiellogik durch Aufruf einer \texttt{update()} Methode zu aktualisieren.
 Bei jeder Aktualisierung wird auf Kollisionen geprüft.
-Es kann bei zu geringer Aktualisierungsrate, beispielsweise aus Performancegründen, oder zu hoher Geschwindigkeit der bewegenden Spielobjekte dazu kommen, dass einzelne Treffer mit Objekten nicht erkannt, und die Spielobjekte somit über Objekte springen können.
+Es kann bei zu geringer Aktualisierungsrate, beispielsweise aus Performancegründen oder zu hoher Geschwindigkeit der bewegenden Spielobjekte, dazu führen, dass einzelne Treffer mit Objekten nicht erkannt, und die Spielobjekte somit über Objekte springen können.
 Aus diesem Grund unterteilt der \texttt{LevelController} Bewegungsintentionen in mehrere Teilschritte, prüft diese einzeln und unterbricht die Bewegung sobald eine Kollision innerhalb eines Teilschrittes erkannt wurde.
-Dies sorgt auch dafür, dass Spielobjekte sauber an Kanten anderer Spielobjekte stehen bleiben und nicht beispielsweise wenige Pixel davor.
+Dies sorgt auch dafür, dass Spielobjekte sauber an Kanten anderer Spielobjekte stehen bleiben und nicht wenige Pixel davor oder dahinter.
 
 
 \subsubsection{Künstliche Intelligenz der NPC}
@@ -104,4 +125,5 @@ Die Intelligenz ist hierbei eine Wahrscheinlichkeit, mit der auf Wahrgenommenes 
 Die \texttt{updateAI()} Methode iteriert über alle vorhandenen NPC und zieht jeweils eine Linie (Sichtlinie) zwischen dem entsprechenden NPC und dem Spieler.
 Sofern die Sichtlinie kein optisches Hindernis (Blöcke mit \texttt{isBlocking} Eigenschaft) schneidet, wird geprüft ob die Länge der Sichtlinie im Bereich der Sichtweite des NPC ist.
 Sofern dies der Fall ist, wird die beste Richtung zur Bewegung in Richtung des Spielers ermittelt.
-Der NPC übernimmt diese Richtung mit der Wahrscheinlichkeit seiner Intelligenz.
+Der NPC übernimmt diese Richtung mit der Wahrscheinlichkeit seiner Intelligenz. 
+\todo{Das bedeutet je höher die Intelligenz gewählt ist, desto wahrscheinlicher wird der NPC auch seine Richtung in die des Spielers anpassen.}
