@@ -2,7 +2,7 @@
 
 In diesem Abschnitt wird das Projekt des Levelgenerators näher erläutert. Die Schwerpunkte liegen dabei auf dem Level Metamodell sowie auf der Codegenerierung aus einer gegebenen Leveldatei. 
  
-Dabei wird erläutert, wie eine textuelle Leveldatei aussehen muss. Anschließend wird das Metamodell, das diese  Domain Specific Language (DSL)\todo{Wenn im Abstract eingeführt, dann nur DSL verwenden} beschreibt, verständlich dargestellt.
+Dabei wird erläutert, wie eine textuelle Leveldatei aussehen muss. Anschließend wird das Metamodell, das diese DSL beschreibt, verständlich dargestellt.
 
 Abschließend wird in diesem Kapitel der Levelgenerator vorgestellt, mit Augenmerk auf seinen Aufbau und seine Funktionsweise.
 
@@ -31,11 +31,10 @@ Bestimmte Attribute besitzen Eigenschaften die angelehnt an das JSON-Format in g
 Dies ist auch im nächsten Auszug gut zu erkennen.
 Es werden die Gegnerklassen angelegt und mit bestimmten Eigenschaften ausgestattet (vgl. Listing \ref{lst:nbno-enemies}).
 Es wird ein Name an die Klassen verteilt, durch den zur Laufzeit eine passende Darstellung des Charakters erreicht wird.
-Weitere Eigenschaften sind die Geschwindigkeit, das Angriffsziel und der Schaden\todo{Stärke des Angriffs (Schaden)} des Gegners.
+Weitere Eigenschaften sind die Geschwindigkeit, das Angriffsziel und die Effektivität des Angriffs(Schaden).
 Die künstliche Intelligenz des Gegenspielers wird hier ebenfalls vergeben.
-Dabei ist die erste Zahl die Sichtweite des Charakters und die Zweite die Wahrscheinlichkeitsangabe, wie sicher\todo{Eventuell umschreiben} er seine Richtung ändert (Die KI wurde in Abschnitt \ref{subsub:architektur:ki} genauer erläutert).
+Dabei gibt die erste Zahl seine Sichtweite an und die Zweite die Angabe der Wahrscheinlichkeit einer Richtungsänderung des Charakters. (Die KI wurde in Abschnitt \ref{subsub:architektur:ki} genauer erläutert).
 
-%TODO mach richtige referenzierung auf kapitel
 \begin{lstlisting}[caption={Gegnerklassen}\label{lst:nbno-enemies},captionpos=t, language=Java]
 enemies {
     1 {
@@ -71,7 +70,6 @@ map {
 \end{lstlisting}
 
 \subsection{Metamodell eines Levels}
-%TODO syntax highlighting für ebnf
 Das Metamodell dieses Projekts beschreibt die Struktur und den Aufbau eines Levels des Spiels. Das Modell ist in EBNF verfasst und generiert durch Antlr die Compiler für die gewünschte NBNO-DSL.
 
 Die DSL muss immer gleich aufgebaut sein (vgl. Listing \ref{lst:grammar-structure}). Es muss mit dem Levelnamen begonnen und anschließend die Levelkonfigurationen festgelegt werden. Danach folgt der Spieler und die Gegnerklassen. Abschließend muss ein Spielfeld definiert werden.
@@ -91,12 +89,11 @@ Separator: ',';
 WS : [ \t\n\r]+ -> skip ; // skip witepsaces tabs and linebreaks
 \end{lstlisting}
  
-Die Definitionen der oben genannten Attribute ähnelt sich sehr, weshalb hier beispielhaft der Ausschnitt der Spielerdefinition erklärt wird. Ein Spieler soll in der DSL als \texttt{player} angeben sein, was hier als Schlüsselwort festgelegt wird. Anschließend folgen die geschweiften Klammern. Die Parserregel legt fest, dass ein Spieler Attribute innerhalb der geschweiften Klammern besitzt. Diese Attribute sind durch Kommata getrennt und beginnen immer mit ihrem Schlüsselwort und einem Doppelpunkt dahinter. 
+Die Definitionen der oben genannten Attribute ähnelt sich sehr, weshalb hier beispielhaft der Ausschnitt der Spielerdefinition erklärt wird. Ein Spieler soll in der DSL als \texttt{player} angeben sein, was hier als Schlüsselwort festgelegt wird (vgl. Listing \ref{lst:grammar-player}). Anschließend folgen die geschweiften Klammern. Die Parserregel legt fest, dass ein Spieler Attribute innerhalb der geschweiften Klammern besitzt. Diese Attribute sind durch Kommata getrennt und beginnen immer mit ihrem Schlüsselwort und einem Doppelpunkt dahinter. 
 
 Der Wert des Attributs ist durch einen Verweis auf eines der möglichen Alphabete angegeben. Durch diese strukturelle Einschränkung werden Listener durch Antlr für jeden Attributwert erstellt. Dadurch ist es möglich beim Parsen im Syntaxbaum direkt an diesem Attribut ``anzuhalten`` und sich den Wert ausgeben zu lassen. Dies erleichtert die semantische Prüfung im Levelgenerator. Die anderen Schlüsselattribute der NBNO-DSL sind nach dem gleichen Schema aufgebaut. 
 
-\todo{Caption und Label im Listing fehlen}
-\begin{lstlisting}[caption={}\label{lst:},captionpos=t, language=Java] 
+\begin{lstlisting}[caption={Spieler seine Attribute}\label{lst:grammar-player},captionpos=t, language=Java] 
 //the player and its attributes
 player: 'player' ObjectBeginn playerAttributes ObjectEnd ;
 playerAttributes:  speed Separator drinkSpeed Separator beerLevel;
