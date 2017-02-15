@@ -77,7 +77,7 @@ Die DSL muss immer gleich aufgebaut sein (vgl. Listing \ref{lst:grammar-structur
 Um Wiederholungen zu vermeiden, sind Lexerregeln aufgestellt, die Alphabete und Trenner festgelegen.
 Außerdem ist eingestellt, dass alle Leerzeichen und Abstände beim Parsen übersprungen werden.
 
-\begin{lstlisting}[caption={Aufbau und Tokens der DSL}\label{lst:grammar-structure},captionpos=t, language=Java] 
+\begin{lstlisting}[caption={Aufbau und Tokens (LevelGrammar.g4)}\label{lst:grammar-structure},captionpos=t, language=Java] 
 file : levelName levelConfigs player enemies map EOF;
 
 // helper definitions
@@ -93,7 +93,7 @@ Die Definitionen der oben genannten Attribute ähnelt sich sehr, weshalb hier be
 
 Der Wert des Attributs ist durch einen Verweis auf eines der möglichen Alphabete angegeben. Durch diese strukturelle Einschränkung werden Listener durch Antlr für jeden Attributwert erstellt. Dadurch ist es möglich beim Parsen im Syntaxbaum direkt an diesem Attribut ``anzuhalten`` und sich den Wert ausgeben zu lassen. Dies erleichtert die semantische Prüfung im Levelgenerator. Die anderen Schlüsselattribute der NBNO-DSL sind nach dem gleichen Schema aufgebaut. 
 
-\begin{lstlisting}[caption={Spieler seine Attribute}\label{lst:grammar-player},captionpos=t, language=Java] 
+\begin{lstlisting}[caption={Spielerdefinition (LevelGrammar.g4)}\label{lst:grammar-player},captionpos=t, language=Java] 
 //the player and its attributes
 player: 'player' ObjectBeginn playerAttributes ObjectEnd ;
 playerAttributes:  speed Separator drinkSpeed Separator beerLevel;
@@ -115,7 +115,7 @@ Der Generator liest zu Beginn eine NBNO-Datei aus dem \texttt{levelfiles} Projek
 
 Durch das Metamodell ist die syntaktische Analyse bereits abgedeckt, weshalb im Generator die semantische Prüfung fokussiert wird. Dafür werden die erzeugten Listener-Methoden für die Attribute und Attributwerte überschrieben. Im folgenden Codeauszug (vgl. Listing \ref{lst:codegen-lvlName}) wird der Levelname auf Länge (maximal 100 Zeichen) geprüft. Des weiteren wird bei Korrektheit das erste Zeichen zu einem Großbuchstaben gewandelt, so dass die Javaklasse den Javakonventionen entspricht. Ist der Levelname zu lang, so wird ein Fehler geworfen und der Generierungsvorgang abgebrochen.
 
-\begin{lstlisting}[caption={LevelGenerator: Levelnamensprüfung}\label{lst:codegen-lvlName},captionpos=t,language=Java, firstnumber=105]
+\begin{lstlisting}[caption={Levelnamensprüfung (LevelGenerator.java)}\label{lst:codegen-lvlName},captionpos=t,language=Java, firstnumber=105]
 @Override
 public void enterLevelNameValue(LevelGrammarParser.LevelNameValueContext ctx) {
   final String name = ctx.getText();
@@ -131,7 +131,7 @@ Die weiteren Attribute und Eigenschaften werden auf die gleiche Art und Weise ge
 
 Eine weitere interessante Prüfung geschieht bei der Spielkartenanalyse (vgl. Listing \ref{lst:codegen-mapCheck}). Die Map muss immer genau 20 Zeilen und 25 Spalten enthalten. Wobei Spalten in diesem Projekt als Blöcke interpretiert werden. Ein Block wird im Spiel zu einem 32x32 Pixel Block umgerechnet. Auf diese Weise besitzt das Spielfeld immer die gleiche Größe. Die Leveldateien müssten so auch nicht bearbeitet werden, falls die Größen im Spiel einmal skaliert werden sollten.
 
-\begin{lstlisting}[caption={Codegenerator: Map Prüfung}\label{lst:codegen-mapCheck},captionpos=t,language=Java, firstnumber=230]
+\begin{lstlisting}[caption={Map Prüfung (LevelGenerator.java)}\label{lst:codegen-mapCheck},captionpos=t,language=Java, firstnumber=230]
 @Override
 public void enterMapValue(LevelGrammarParser.MapValueContext ctx) {
   final int maxRows = 20;
