@@ -6,15 +6,19 @@ Dadurch ist eine strikte Unabhängigkeit zwischen dem Levelgenerator und dem Spi
 Um die Teamarbeit effizient zu gestalten, wird das Versionierungswerkzeug Git\footnote{https://git-scm.com} eingesetzt.
 Es ermöglicht die Zusammenarbeit über die Plattform GitHub\footnote{https://github.com}, auf der verschiedene nützliche Features angeboten werden.
 Sehr häufige Verwendung in diesem Projekt findet die Erzeugung und Zusammenführung \textit{von Pull Requests}.
-Nachdem ein Entwickler ein Feature entwickelt oder einen Fehler behoben hat, wird so ein Pull Request erstellt.
-Ein weiteres Teammitglied überprüft diese Codeänderung und merged sie, bei positivem Ergebnis, auf die Master-Branch.
+Nachdem ein Entwickler ein Feature entwickelt oder einen Fehler behoben hat, wird ein Pull Request erstellt.
+Dieser symbolisiert einen Änderungswunsch am Code.
+Ein weiteres Teammitglied überprüft diese Codeänderung und führt sie, bei positivem Ergebnis, mit der Master-Branch zusammen (Merging).
 
-Eine weitere wichtige GitHub Funktion besteht im Erstellen von sogenannten \textit{Issues}.
-Dies sind repository-interne Forumseinträge, die bestimmte projektbezogene Themen behandeln sollen.
+Eine weitere wichtige GitHub Funktion ist das Erstellen von sogenannten \textit{Issues}.
+Dies sind repository-interne Foreneinträge, die bestimmte projektbezogene Themen behandeln.
 Es können durch Labels Rubriken festgelegt werden, wie zum Beispiel ``Bug`` oder ``Question``.
-So erhält das Projekt eine Struktur und Entscheidungen bzw. Hinweise, die für das gesamte Team wichtig sind, werden an zentraler Stelle veröffentlicht und zur Diskussion freigegeben.
+So werden Entscheidungen bzw. Hinweise, die für das gesamte Team wichtig sind, an zentraler Stelle veröffentlicht und zur Diskussion freigegeben.
 
 Für das Bauen und die Verwaltung von Abhängigkeiten zu Bibliotheken und Frameworks wird im Spieleprojekt das Tool Maven verwendet.
 Im Generatorprojekt dagegen besteht keine Notwendigkeit für ein solches Tool, weshalb hier Maven nicht eingesetzt wird.
 
-Alle im Spiel verwendeten Grafiken wurden selbst mit Hilfe der Software Photoshop im Pixelart Stil erstellt. Bei dieser Art von Bilderstellung wird Pixel für Pixel eingefärbt und mit anderen Pixeln zusammengesetzt. Das Ergebnis ergibt dann ein Bild, das verwendet werden kann.
+Alle im Spiel verwendeten Grafiken wurden mit Hilfe der Software Photoshop im \textit{Pixel-Art} Stil erstellt.
+Bei dieser Art von Bilderstellung wird per Hand Pixel für Pixel eingefärbt.
+Um nicht-quadratische Bilder mit Transparenz auszustatten, wird PNG als Bildformat verwendet.
+Dies ist für die Darstellung des Spielers und der Gegner relevant, da diese keine quadratischen Formen aufweisen.
