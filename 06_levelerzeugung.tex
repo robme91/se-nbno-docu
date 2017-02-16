@@ -170,10 +170,11 @@ public void enterMapValue(LevelGrammarParser.MapValueContext ctx) {
 
 Ein weiteres Detail wird in dieser Methode ebenfalls sichtbar. Beim Durchlaufen der einzelnen Blöcke der Karte wird für jeden Block ein String angelegt. Diese Strings werden in einer Liste von Strings gesammelt.
 
-Alle variablen Attribute, wie der Spieler oder die Gegnerklassen,  werden als Strings erzeugt. Zu beachten ist, dass unter jedem Gegner und dem Spieler jeweils noch ein Straßenblock erzeugt werden muss. All diese erstellten Zeichenketten werden in Listen gespeichert. 
+Alle variablen Attribute, wie der Spieler oder die Gegnerklassen, werden als Strings erzeugt. Zu beachten ist, dass unter jedem Gegner und dem Spieler jeweils noch ein Straßenblock erzeugt werden muss. All diese erstellten Zeichenketten werden in Listen gespeichert. 
 
 Die Codegenerierung erfolgt am Ende durch das Zusammensetzen aller gespeicherten Strings. Alle Konstanten Angaben, wie der Import von Datentypen oder das Überschreiben des Konstruktors, werden zuvor in der Methode \texttt{generateLevelClass()} mit den anderen variablen Strings in einer Liste zusammengeführt. Diese enthält dann die komplette Levelklasse als Stringrepräsentation.
  
 Über die final entstandene Stringliste wird in der \texttt{writeFile()} Methode iteriert und für jeden String eine eigene Zeile in die neue Javaklasse geschrieben.
 
-Ist ein Level erfolgreich erstellt, muss diese Javadatei in das \texttt{level} Package des Spielprojekts kopiert werden. Wird das Spiel dann gestartet steht das Level zur Verfügung. Dies ist das Bindeglied zwischen den zwei Projekten.\todo{evtl. rausnehmen den bindegleidsatz}
+Ist ein Level erfolgreich erstellt, muss diese Javadatei in das \texttt{level} Package des Spielprojekts kopiert werden.
+Wird das Spiel dann gestartet, steht das Level zur Verfügung.
